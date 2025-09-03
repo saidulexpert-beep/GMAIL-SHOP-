@@ -7,86 +7,142 @@
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #121212; color: #ffffff; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #121212; 
+            color: #ffffff;
+            background-image: radial-gradient(circle at top left, rgba(255, 140, 0, 0.08), transparent 40%);
+            background-attachment: fixed;
+        }
         .dark-bg { background-color: #121212; }
-        .card-bg { background-color: #1e1e1e; }
-        .border-accent { border-color: #ff8c00; }
-        .text-accent { color: #ff8c00; }
-        .btn, .btn-accent, .btn-outline-accent { transition: all 0.2s ease-in-out; transform: scale(1); }
-        .btn:active, .btn-accent:active, .btn-outline-accent:active { transform: scale(0.95); }
-        .btn-accent { background-color: #ff8c00; color: #121212; font-weight: bold; }
-        .btn-accent:hover { background-color: #e67e00; }
-        .btn-outline-accent { border: 1px solid #ff8c00; color: #ff8c00; }
-        .btn-outline-accent:hover { background-color: #ff8c00; color: #121212; }
-        .btn-accent:disabled, .btn-disabled { background-color: #555; color: #999; cursor: not-allowed; }
-        .input-field { background-color: #2c2c2c; border: 1px solid #444; }
+        .card-bg { 
+            background-color: rgba(30, 30, 30, 0.7); 
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2);
+        }
+        .text-accent-gradient {
+            background: linear-gradient(to right, #ffaf58, #ff8c00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .btn, .btn-gradient, .btn-outline-accent { 
+            transition: all 0.2s ease-in-out; 
+            transform: scale(1); 
+            border: none;
+        }
+        .btn:active, .btn-gradient:active, .btn-outline-accent:active { transform: scale(0.96); }
+        .btn-gradient { 
+            background-image: linear-gradient(to right, #ff8c00, #ffae42);
+            color: #121212; 
+            font-weight: bold; 
+            box-shadow: 0 4px 15px rgba(255, 140, 0, 0.2);
+        }
+        .btn-gradient:hover { box-shadow: 0 6px 20px rgba(255, 140, 0, 0.3); }
+        .btn-outline-accent { 
+            background-color: transparent;
+            border: 1px solid #ff8c00; 
+            color: #ff8c00; 
+        }
+        .btn-outline-accent:hover { 
+            background-color: #ff8c00; 
+            color: #121212; 
+        }
+        .btn-gradient:disabled, .btn-disabled { 
+            background-image: none;
+            background-color: #444; 
+            color: #888; 
+            cursor: not-allowed; 
+            box-shadow: none;
+        }
+        .input-field { 
+            background-color: #2c2c2c; 
+            border: 1px solid #444; 
+            transition: all 0.2s ease;
+        }
+        .input-field:focus {
+            border-color: #ff8c00;
+            box-shadow: 0 0 0 3px rgba(255, 140, 0, 0.3);
+            outline: none;
+        }
         .main-page { display: none; }
         .main-page.active { display: flex; animation: fadeIn 0.5s ease-in-out; }
         .sub-page { display: none; }
         .sub-page.active { display: block; animation: fadeIn 0.3s ease-in-out; }
+        .bottom-nav a { color: #9ca3af; }
         .bottom-nav a.active { color: #ff8c00; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .bottom-nav {
+             border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .header {
+             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+             background-color: rgba(18, 18, 18, 0.7);
+             backdrop-filter: blur(10px);
+             -webkit-backdrop-filter: blur(10px);
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="max-w-md mx-auto">
 
     <div id="loader" class="hidden fixed inset-0 dark-bg bg-opacity-75 flex items-center justify-center z-50">
-        <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-accent"></div>
+        <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-[#ff8c00]"></div>
     </div>
 
-    <div id="auth-section" class="min-h-screen p-6 flex-col justify-center main-page">
-        <h1 class="text-4xl font-bold text-center mb-2 text-accent">Daily PayBot</h1>
-        <p class="text-center text-gray-400 mb-8">এটি চালিয়ে যেতে অনুগ্রহ করে লগইন করুন অথবা সাইন আপ করুন</p>
-        <div id="auth-container">
-            <div id="login-view">
-                <input id="login-email" type="email" placeholder="Email" class="w-full p-3 rounded-lg input-field mb-4">
-                <input id="login-password" type="password" placeholder="Password" class="w-full p-3 rounded-lg input-field mb-4">
-                <button id="login-btn" class="w-full p-3 rounded-lg btn-accent mb-4">Login</button>
-                <p class="text-center text-gray-400">অ্যাকাউন্ট নেই? <a href="#" id="show-signup" class="font-semibold text-accent">Sign Up</a></p>
+    <div id="auth-section" class="min-h-screen p-4 flex-col justify-center items-center main-page">
+        <div class="w-full max-w-sm card-bg p-8 rounded-2xl">
+            <div class="text-center mb-6">
+                <i data-lucide="mail-check" class="w-16 h-16 text-[#ff8c00] mx-auto"></i>
+                <h1 class="text-3xl font-extrabold text-accent-gradient mt-4">GMAIL SHOP</h1>
+                <p class="text-gray-400 mt-1">Welcome! Please log in or sign up.</p>
             </div>
-            <div id="signup-view" class="hidden">
-                 <input id="signup-name" type="text" placeholder="Full Name" class="w-full p-3 rounded-lg input-field mb-4">
-                <input id="signup-email" type="email" placeholder="Email" class="w-full p-3 rounded-lg input-field mb-4">
-                <input id="signup-password" type="password" placeholder="Password" class="w-full p-3 rounded-lg input-field mb-4">
-                <button id="signup-btn" class="w-full p-3 rounded-lg btn-accent mb-4">Sign Up</button>
-                <p class="text-center text-gray-400">আগে থেকেই অ্যাকাউন্ট আছে? <a href="#" id="show-login" class="font-semibold text-accent">Login</a></p>
+            <div id="auth-container">
+                <div id="login-view">
+                    <input id="login-email" type="email" placeholder="Email" class="w-full p-3 rounded-lg input-field mb-4">
+                    <input id="login-password" type="password" placeholder="Password" class="w-full p-3 rounded-lg input-field mb-4">
+                    <button id="login-btn" class="w-full p-3 rounded-lg btn-gradient mb-4">Login</button>
+                    <p class="text-center text-gray-400">No account? <a href="#" id="show-signup" class="font-semibold text-[#ff8c00]">Sign Up</a></p>
+                </div>
+                <div id="signup-view" class="hidden">
+                     <input id="signup-name" type="text" placeholder="Full Name" class="w-full p-3 rounded-lg input-field mb-4">
+                    <input id="signup-email" type="email" placeholder="Email" class="w-full p-3 rounded-lg input-field mb-4">
+                    <input id="signup-password" type="password" placeholder="Password" class="w-full p-3 rounded-lg input-field mb-4">
+                    <button id="signup-btn" class="w-full p-3 rounded-lg btn-gradient mb-4">Sign Up</button>
+                    <p class="text-center text-gray-400">Already have an account? <a href="#" id="show-login" class="font-semibold text-[#ff8c00]">Login</a></p>
+                </div>
             </div>
         </div>
     </div>
 
     <div id="app-container" class="min-h-screen flex-col main-page">
-        <header class="flex items-center justify-between p-4 sticky top-0 bg-opacity-80 backdrop-blur-md z-10 dark-bg">
-            <h1 class="text-xl font-bold">Daily PayBot</h1>
-            <div id="coin-balance-header" class="font-bold text-accent"><span id="header-coin-balance">0</span> Coins</div>
+        <header class="header flex items-center justify-between p-4 sticky top-0 z-10">
+            <h1 class="text-xl font-bold text-accent-gradient">GMAIL SHOP</h1>
+            <div id="coin-balance-header" class="font-bold text-[#ff8c00]"><span id="header-coin-balance">0</span> Coins</div>
         </header>
 
         <main class="flex-grow pb-16">
             <div id="home-page" class="p-4 space-y-6 sub-page">
-                <div class="card-bg p-4 rounded-lg flex items-center justify-between">
-                    <div>
-                        <p class="text-gray-400 text-sm">Your Balance</p>
-                        <p class="text-3xl font-bold"><span id="coin-balance">0</span> Coins</p>
+                <div class="card-bg p-5 rounded-xl">
+                    <p class="text-gray-400 text-sm mb-1">Your Balance</p>
+                    <div class="flex items-center justify-between">
+                        <p class="text-4xl font-bold"><span id="coin-balance">0</span> <span class="text-2xl text-gray-400">Coins</span></p>
+                        <button id="home-deposit-btn" class="btn-gradient px-6 py-2 rounded-lg">Deposit</button>
                     </div>
-                    <button id="home-deposit-btn" class="bg-white text-black font-semibold px-6 py-2 rounded-lg">Deposit</button>
                 </div>
                 <section>
-                    <div class="flex justify-between items-center mb-4">
-                        <div>
-                            <h2 class="text-lg font-semibold">Daily Tasks</h2>
-                            <p class="text-sm text-gray-400">Complete tasks to get rewards.</p>
-                        </div>
-                    </div>
+                    <h2 class="text-lg font-semibold px-2 mb-3">Daily Tasks</h2>
                     <div class="space-y-3">
-                         <div class="card-bg p-3 rounded-lg flex items-center justify-between">
-                            <div class="flex items-center space-x-3"><span class="text-3xl">😎</span><div><h3 class="font-semibold">Join Telegram</h3><p class="text-xs text-gray-400">Join and get updates</p></div></div>
+                         <div class="card-bg p-4 rounded-lg flex items-center justify-between">
+                            <div class="flex items-center space-x-4"><span class="text-3xl">😎</span><div><h3 class="font-semibold">Join Telegram</h3><p class="text-xs text-gray-400">Join and get updates</p></div></div>
                             <a href="https://t.me/Daily_Cash_Pay" target="_blank" class="bg-blue-600 text-white font-bold px-4 py-2 rounded-lg text-sm btn">Join</a>
                         </div>
-                        <div class="card-bg p-3 rounded-lg flex items-center justify-between">
-                            <div class="flex items-center space-x-3"><span class="text-3xl">🤩</span><div><h3 class="font-semibold">Go to Tasks</h3><p class="text-xs text-gray-400">Complete tasks for rewards</p></div></div>
-                            <button class="bg-white text-black font-bold px-4 py-2 rounded-lg text-sm btn" onclick="navigateTo('tasks-page')">Tasks</button>
+                        <div class="card-bg p-4 rounded-lg flex items-center justify-between">
+                            <div class="flex items-center space-x-4"><span class="text-3xl">🤩</span><div><h3 class="font-semibold">Go to Tasks</h3><p class="text-xs text-gray-400">Complete tasks for rewards</p></div></div>
+                            <button class="bg-gray-200 text-black font-bold px-4 py-2 rounded-lg text-sm btn" onclick="navigateTo('tasks-page')">Tasks</button>
                         </div>
                     </div>
                 </section>
@@ -100,45 +156,25 @@
 
             <div id="pay-page" class="p-4 space-y-6 sub-page">
                 <h2 class="text-xl font-bold text-center">Pay Center</h2>
-                <div class="card-bg p-4 rounded-lg">
-                    <h3 class="font-semibold mb-3">Make a Deposit</h3>
-                    <p class="text-sm text-gray-400 mb-2">নিচের নম্বরে টাকা পাঠান:</p>
-                    <div class="space-y-2 mb-4">
-                        <div class="bg-gray-800 p-2 rounded-lg flex justify-between items-center">
-                            <p class="text-sm font-medium">নগদ: <span class="font-bold tracking-wider">01864260513</span></p>
-                            <button onclick="copyToClipboard('01864260513')" class="p-1"><i data-lucide="copy" class="w-4 h-4 text-gray-400"></i></button>
+                <div class="card-bg p-5 rounded-xl space-y-4">
+                    <div>
+                        <h3 class="font-semibold mb-4 text-lg">Make a Deposit</h3>
+                        <p class="text-sm text-gray-400 mb-3">নিচের নম্বরে টাকা পাঠান:</p>
+                        <div class="space-y-3 mb-4">
+                            <div class="bg-gray-800 p-3 rounded-lg flex items-center justify-between"><div class="flex items-center space-x-3"><i data-lucide="smartphone" class="w-8 h-8 text-orange-400"></i><div><p class="font-bold text-md">নগদ</p><p class="text-gray-300 font-mono tracking-widest text-sm">01864260513</p></div></div><button onclick="copyToClipboard('01864260513')" class="p-2 bg-gray-700 rounded-full hover:bg-gray-600 transition-colors"><i data-lucide="copy" class="w-4 h-4"></i></button></div>
+                            <div class="bg-gray-800 p-3 rounded-lg flex items-center justify-between"><div class="flex items-center space-x-3"><i data-lucide="smartphone" class="w-8 h-8 text-pink-500"></i><div><p class="font-bold text-md">বিকাশ</p><p class="text-gray-300 font-mono tracking-widest text-sm">01827750260</p></div></div><button onclick="copyToClipboard('01827750260')" class="p-2 bg-gray-700 rounded-full hover:bg-gray-600 transition-colors"><i data-lucide="copy" class="w-4 h-4"></i></button></div>
+                            <div class="bg-gray-800 p-3 rounded-lg flex items-center justify-between"><div class="flex items-center space-x-3"><i data-lucide="rocket" class="w-8 h-8 text-purple-400"></i><div><p class="font-bold text-md">রকেট</p><p class="text-gray-300 font-mono tracking-widest text-sm">018277502064</p></div></div><button onclick="copyToClipboard('018277502064')" class="p-2 bg-gray-700 rounded-full hover:bg-gray-600 transition-colors"><i data-lucide="copy" class="w-4 h-4"></i></button></div>
+                            <div class="bg-gray-800 p-3 rounded-lg flex items-center justify-between"><div class="flex items-center space-x-3"><i data-lucide="dollar-sign" class="w-8 h-8 text-yellow-400"></i><div><p class="font-bold text-md">Binance Pay ID</p><p class="text-gray-300 font-mono tracking-widest text-sm">1085460262</p></div></div><button onclick="copyToClipboard('1085460262')" class="p-2 bg-gray-700 rounded-full hover:bg-gray-600 transition-colors"><i data-lucide="copy" class="w-4 h-4"></i></button></div>
                         </div>
-                        <div class="bg-gray-800 p-2 rounded-lg flex justify-between items-center">
-                            <p class="text-sm font-medium">বিকাশ: <span class="font-bold tracking-wider">01827750260</span></p>
-                            <button onclick="copyToClipboard('01827750260')" class="p-1"><i data-lucide="copy" class="w-4 h-4 text-gray-400"></i></button>
-                        </div>
-                        <div class="bg-gray-800 p-2 rounded-lg flex justify-between items-center">
-                            <p class="text-sm font-medium">রকেট: <span class="font-bold tracking-wider">018277502064</span></p>
-                            <button onclick="copyToClipboard('018277502064')" class="p-1"><i data-lucide="copy" class="w-4 h-4 text-gray-400"></i></button>
+                        <p class="text-sm text-gray-400 mb-3">টাকা পাঠানোর পর নিচের ফর্মটি পূরণ করুন:</p>
+                        <div class="space-y-3">
+                            <select id="deposit-method" class="w-full p-3 rounded-lg input-field"><option value="">কোন মাধ্যমে টাকা পাঠিয়েছেন?</option><option value="Nagad">নগদ</option><option value="bKash">বিকাশ</option><option value="Rocket">রকেট</option><option value="Binance">Binance</option></select>
+                            <input id="deposit-amount" type="number" placeholder="টাকার পরিমাণ (BDT)" class="w-full p-3 rounded-lg input-field">
+                            <input id="sender-number" type="text" placeholder="আপনার যে নম্বর থেকে টাকা পাঠিয়েছেন" class="w-full p-3 rounded-lg input-field">
+                            <input id="deposit-txid" type="text" placeholder="Transaction ID" class="w-full p-3 rounded-lg input-field">
+                            <button id="deposit-btn" class="w-full p-3 rounded-lg btn-gradient">Submit Deposit</button>
                         </div>
                     </div>
-                    <p class="text-sm text-gray-400 mb-3">টাকা পাঠানোর পর নিচের ফর্মটি পূরণ করুন:</p>
-                    <div class="space-y-3">
-                        <select id="deposit-method" class="w-full p-3 rounded-lg input-field">
-                            <option value="">কোন মাধ্যমে টাকা পাঠিয়েছেন?</option>
-                            <option value="Nagad">নগদ</option>
-                            <option value="bKash">বিকাশ</option>
-                            <option value="Rocket">রকেট</option>
-                        </select>
-                        <input id="deposit-amount" type="number" placeholder="টাকার পরিমাণ (BDT)" class="w-full p-3 rounded-lg input-field">
-                        <input id="sender-number" type="text" placeholder="আপনার যে নম্বর থেকে টাকা পাঠিয়েছেন" class="w-full p-3 rounded-lg input-field">
-                        <input id="deposit-txid" type="text" placeholder="Transaction ID" class="w-full p-3 rounded-lg input-field">
-                        <button id="deposit-btn" class="w-full p-3 rounded-lg btn-accent">Submit Deposit</button>
-                    </div>
-                </div>
-                <div class="card-bg p-4 rounded-lg">
-                    <h3 class="font-semibold mb-3">Request Withdrawal</h3>
-                    <p class="text-sm text-gray-400 mb-2">Minimum Withdrawal: <span id="min-withdrawal-info">...</span> Coins</p>
-                    <p class="text-sm text-gray-400 mb-4 font-semibold" id="coin-value-info">...</p>
-                    <input id="withdraw-amount" type="number" placeholder="Type your points" class="w-full p-3 rounded-lg input-field mb-3">
-                    <select id="withdraw-method" class="w-full p-3 rounded-lg input-field mb-3"></select>
-                    <div id="payment-details-container"></div>
-                    <button id="withdraw-btn" class="w-full p-3 rounded-lg btn-accent mt-3">Request Withdrawal</button>
                 </div>
                  <div>
                     <h3 class="text-lg font-semibold mb-3">Payment History</h3>
@@ -147,10 +183,9 @@
             </div>
 
             <div id="mail-page" class="p-4 space-y-6 sub-page">
-                <h2 class="text-xl font-bold text-center">📧 Mail Store</h2>
-                <p class="text-gray-400 text-center mb-4">কম দামে মেইল কিনুন। আপনার কেনা মেইল নিচে ইতিহাসে দেখানো হবে।</p>
-                <div id="mail-list" class="space-y-4">
-                    </div>
+                <h2 class="text-xl font-bold text-center">GMAIL SHOP</h2>
+                <p class="text-gray-400 text-center mb-4">কম দামে এবং  সহজে মেইল কিনুন</p>
+                <div id="mail-list" class="space-y-4"></div>
                  <div>
                     <h3 class="text-lg font-semibold mb-3 mt-6">Purchase History</h3>
                     <div id="mail-purchase-history" class="space-y-3"></div>
@@ -166,10 +201,10 @@
         </nav>
     </div>
     
-    <div id="custom-alert" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-        <div class="bg-gray-800 rounded-lg p-6 w-full max-w-sm text-center">
-            <p id="alert-message" class="mb-4 whitespace-pre-wrap"></p>
-            <button id="alert-ok-btn" class="btn-accent px-6 py-2 rounded-lg">OK</button>
+    <div id="custom-alert" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+        <div class="bg-gray-800 rounded-lg p-6 w-full max-w-sm text-center border border-gray-700">
+            <p id="alert-message" class="mb-5 whitespace-pre-wrap"></p>
+            <button id="alert-ok-btn" class="btn-gradient px-8 py-2 rounded-lg">OK</button>
         </div>
     </div>
 
@@ -185,7 +220,7 @@
         
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, limit, runTransaction } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, limit, runTransaction, getCountFromServer } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
@@ -198,10 +233,6 @@
         const loader = document.getElementById('loader');
         const coinBalanceEl = document.getElementById('coin-balance');
         const headerCoinBalanceEl = document.getElementById('header-coin-balance');
-        const minWithdrawalInfoEl = document.getElementById('min-withdrawal-info');
-        const coinValueInfoEl = document.getElementById('coin-value-info');
-        const withdrawMethodSelect = document.getElementById('withdraw-method');
-        const paymentDetailsContainer = document.getElementById('payment-details-container');
 
         window.onload = () => {
             lucide.createIcons();
@@ -264,7 +295,6 @@
                     paymentMethods: ["BKASH", "NAGAD"], 
                     coinValueCoins: 1000, 
                     coinValueBdt: 10,
-                    // New mail list as per request
                     mails: [
                         { type: 'L-GMAIL', priceBdt: 4, stockKey: 'l_gmail_stock' },
                         { type: 'O-GMAIL', priceBdt: 3, stockKey: 'o_gmail_stock' },
@@ -284,26 +314,6 @@
             const balance = userData.balance || 0;
             coinBalanceEl.textContent = balance;
             headerCoinBalanceEl.textContent = balance;
-            
-            minWithdrawalInfoEl.textContent = `${appConfig.minWithdrawal || 5000} Coins`;
-            coinValueInfoEl.textContent = `${appConfig.coinValueCoins || 1000} Coins = ৳${appConfig.coinValueBdt || 10}`;
-
-            withdrawMethodSelect.innerHTML = '';
-            (appConfig.paymentMethods || []).forEach(method => {
-                const option = document.createElement('option');
-                option.value = method;
-                option.textContent = method;
-                withdrawMethodSelect.appendChild(option);
-            });
-            updateDynamicPaymentFields();
-        }
-
-        function updateDynamicPaymentFields() {
-            const selectedMethod = withdrawMethodSelect.value.toLowerCase();
-            let placeholder = "Enter your payment number";
-            if (selectedMethod.includes('bkash')) placeholder = "আপনার বিকাশ নম্বর লিখুন।";
-            if (selectedMethod.includes('nagad')) placeholder = "আপনার নগদ নম্বর লিখুন।";
-            paymentDetailsContainer.innerHTML = `<input id="payment-detail-input" type="text" placeholder="${placeholder}" class="w-full p-3 rounded-lg input-field">`;
         }
 
         function showMainPage(pageId) {
@@ -315,13 +325,14 @@
             document.querySelectorAll('.sub-page').forEach(p => p.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
             document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active', 'text-accent');
-                if (link.dataset.page === pageId) link.classList.add('active', 'text-accent');
+                link.classList.remove('active');
+                if (link.dataset.page === pageId) link.classList.add('active');
             });
 
             if (pageId === 'tasks-page') loadTasks();
             if (pageId === 'pay-page') loadPaymentHistory();
             if (pageId === 'mail-page') loadMailStore();
+            lucide.createIcons();
         }
         window.navigateTo = navigateTo;
 
@@ -335,10 +346,8 @@
                 link.addEventListener('click', (e) => { e.preventDefault(); navigateTo(link.dataset.page); });
             });
             
-            document.getElementById('withdraw-btn').addEventListener('click', handleWithdrawal);
             document.getElementById('deposit-btn').addEventListener('click', handleDepositRequest);
             document.getElementById('home-deposit-btn').addEventListener('click', () => navigateTo('pay-page'));
-            withdrawMethodSelect.addEventListener('change', updateDynamicPaymentFields);
         }
 
         async function handleSignup() {
@@ -353,7 +362,7 @@
                 const userRef = doc(db, "users", user.uid);
                 await setDoc(userRef, {
                     uid: user.uid, name: name, email: user.email,
-                    balance: 0, createdAt: serverTimestamp(), isBlocked: false
+                    balance: 50, createdAt: serverTimestamp(), isBlocked: false
                 });
             } catch (error) {
                 showAlert(error.message);
@@ -378,15 +387,13 @@
         
         async function loadPaymentHistory() {
             const historyList = document.getElementById('payment-history-list');
-            historyList.innerHTML = '<p class="text-gray-400">ইতিহাস লোড হচ্ছে...</p>';
+            historyList.innerHTML = '<p class="text-gray-400">হিস্টি লোড হচ্ছে...</p>';
             try {
-                const withdrawQuery = query(collection(db, "withdrawals"), where("userId", "==", currentUser.uid), orderBy("requestedAt", "desc"));
+                // Only fetching deposit history now
                 const depositQuery = query(collection(db, "deposits"), where("userId", "==", currentUser.uid), orderBy("requestedAt", "desc"));
-                const [withdrawSnapshot, depositSnapshot] = await Promise.all([getDocs(withdrawQuery), getDocs(depositQuery)]);
+                const depositSnapshot = await getDocs(depositQuery);
                 let history = [];
-                withdrawSnapshot.forEach(doc => history.push({type: 'Withdrawal', ...doc.data()}));
                 depositSnapshot.forEach(doc => history.push({type: 'Deposit', ...doc.data()}));
-                history.sort((a, b) => b.requestedAt.toMillis() - a.requestedAt.toMillis());
 
                 if (history.length === 0) {
                     historyList.innerHTML = '<p class="text-gray-400 text-center">কোনো রেকর্ড পাওয়া যায়নি।</p>'; return;
@@ -395,49 +402,12 @@
                 history.forEach(item => {
                     let statusColor = item.status === 'approved' ? 'text-green-400' : item.status === 'rejected' ? 'text-red-400' : 'text-yellow-400';
                     const date = item.requestedAt ? item.requestedAt.toDate().toLocaleDateString() : 'N/A';
-                    const amountText = item.type === 'Deposit' ? `৳${item.amount}` : `${item.amount} Coins`;
+                    const amountText = `৳${item.amount}`;
                     historyList.innerHTML += `<div class="card-bg p-3 rounded-lg flex items-center justify-between"><div><p class="font-semibold">${item.type} - ${amountText}</p><p class="text-xs text-gray-400">${date}</p></div><p class="font-bold ${statusColor} capitalize">${item.status}</p></div>`;
                 });
             } catch (error) {
                 console.error("Error fetching payment history (check Firestore indexes):", error);
-                historyList.innerHTML = '<p class="text-red-400 text-center">ইতিহাস লোড করা যায়নি।</p>';
-            }
-        }
-
-        async function handleWithdrawal() {
-            const amount = parseInt(document.getElementById('withdraw-amount').value);
-            const method = document.getElementById('withdraw-method').value;
-            const paymentDetail = document.getElementById('payment-detail-input')?.value.trim();
-            const minWithdrawal = appConfig.minWithdrawal || 5000;
-
-            if (!amount || amount <= 0) return showAlert("সঠিক তথ্য পূরণ করুন।");
-            if (amount < minWithdrawal) return showAlert(`সর্বনিম্ন ${minWithdrawal} কয়েন উইথড্র করা যাবে।`);
-            if (amount > userData.balance) return showAlert("অপর্যাপ্ত ব্যালেন্স।");
-            if (!paymentDetail) return showAlert("অনুগ্রহ করে আপনার পেমেন্ট নম্বর দিন।");
-
-            loader.style.display = 'flex';
-            const userRef = doc(db, "users", currentUser.uid);
-            try {
-                await runTransaction(db, async (transaction) => {
-                    const userDoc = await transaction.get(userRef);
-                    if (!userDoc.exists() || userDoc.data().balance < amount) { throw new Error("অপর্যাপ্ত ব্যালেন্স।"); }
-                    const newBalance = userDoc.data().balance - amount;
-                    transaction.update(userRef, { balance: newBalance });
-                    const withdrawalRef = doc(collection(db, "withdrawals"));
-                    transaction.set(withdrawalRef, {
-                        userId: currentUser.uid, userName: userData.name, userEmail: userData.email,
-                        amount: amount, method: method, paymentDetail: paymentDetail, status: "pending", requestedAt: serverTimestamp()
-                    });
-                });
-                userData.balance -= amount; updateUI();
-                showAlert("আপনার উইথড্র অনুরোধ সফলভাবে জমা দেওয়া হয়েছে!");
-                document.getElementById('withdraw-amount').value = '';
-                document.getElementById('payment-detail-input').value = '';
-                loadPaymentHistory();
-            } catch (error) {
-                showAlert("অনুরোধ জমা দিতে সমস্যা হয়েছে: " + error.message);
-            } finally {
-                loader.style.display = 'none';
+                historyList.innerHTML = '<p class="text-red-400 text-center">হিস্টি লোড করা যায়নি।</p>';
             }
         }
 
@@ -490,19 +460,16 @@
                     const taskDiv = document.createElement("div");
                     taskDiv.className = "card-bg p-4 rounded-lg space-y-3";
                     taskDiv.innerHTML = submission ? `
-                        <div><h3 class="text-lg font-bold">${task.title}</h3><p class="text-sm text-gray-400">পুরস্কার: <span class="font-semibold text-accent">${task.reward} Coins</span></p></div>
+                        <div><h3 class="text-lg font-bold">${task.title}</h3><p class="text-sm text-gray-400">পুরস্কার: <span class="font-semibold text-[#ff8c00]">${task.reward} Coins</span></p></div>
                         <div class="text-center p-2 rounded-lg ${submission.status === 'approved' ? 'bg-green-500/20 text-green-400' : submission.status === 'rejected' ? 'bg-red-500/20 text-red-400' : 'bg-yellow-500/20 text-yellow-400'}">
                             <p class="font-bold capitalize">${submission.status}</p>
                         </div>` : `
-                        <div class="flex justify-between items-start">
-                            <div><h3 class="text-lg font-bold">${task.title}</h3><p class="text-sm text-gray-400">পুরস্কার: <span class="font-semibold text-accent">${task.reward} Coins</span></p></div>
-                            <a href="${task.videoUrl}" target="_blank" class="text-xs bg-gray-700 hover:bg-gray-600 text-white px-2 py-1 rounded">ভিডিও দেখুন</a>
-                        </div>
+                        <div><h3 class="text-lg font-bold">${task.title}</h3><p class="text-sm text-gray-400">পুরস্কার: <span class="font-semibold text-[#ff8c00]">${task.reward} Coins</span></p></div>
                         <div id="task-input-area-${task.id}" class="hidden space-y-2">
                             <input type="text" id="code-${task.id}" placeholder="এখানে ভিডিও কোডটি দিন" class="w-full p-2 rounded-lg input-field"/>
                             <button class="w-full p-2 rounded-lg btn-outline-accent" onclick="submitTask('${task.id}', '${task.code}', ${task.reward})">কোড জমা দিন</button>
                         </div>
-                        <button id="start-btn-${task.id}" class="w-full p-2 rounded-lg btn-accent" onclick="startTaskTimer('${task.id}', ${task.duration || 100})">টাস্ক শুরু করুন</button>`;
+                        <button id="start-btn-${task.id}" class="w-full p-2 rounded-lg btn-gradient" onclick="startTaskTimer('${task.id}', ${task.duration || 100}, '${task.videoUrl}')">টাস্ক শুরু করুন</button>`;
                     taskList.appendChild(taskDiv);
                 });
             } catch (error) {
@@ -532,7 +499,11 @@
             }
         }
 
-        window.startTaskTimer = function(taskId, duration) {
+        window.startTaskTimer = function(taskId, duration, videoUrl) {
+            if (videoUrl && videoUrl !== 'undefined') {
+                window.open(videoUrl, '_blank');
+            }
+            
             const startBtn = document.getElementById(`start-btn-${taskId}`);
             startBtn.disabled = true;
             let timeLeft = duration;
@@ -547,27 +518,54 @@
             }, 1000);
         }
 
+        async function getStockCount(collectionName) {
+            try {
+                const collectionRef = collection(db, collectionName);
+                const q = query(collectionRef, where("isSold", "==", false));
+                const snapshot = await getCountFromServer(q);
+                return snapshot.data().count;
+            } catch (error) {
+                console.error(`Error getting stock count for ${collectionName}:`, error);
+                return 0;
+            }
+        }
+
         async function loadMailStore() {
             const mailListEl = document.getElementById('mail-list');
             const historyListEl = document.getElementById('mail-purchase-history');
-            mailListEl.innerHTML = '';
-            historyListEl.innerHTML = '<p class="text-center text-gray-400">ইতিহাস লোড হচ্ছে...</p>';
+            mailListEl.innerHTML = '<p class="text-center text-gray-400">মেইল লোড হচ্ছে...</p>';
+            historyListEl.innerHTML = '<p class="text-center text-gray-400">হিস্টি লোড হচ্ছে...</p>';
             
-            const bdtToCoinsRate = (appConfig.coinValueCoins || 1000) / (appConfig.coinValueBdt || 10);
-
-            (appConfig.mails || []).forEach(mail => {
-                const costInCoins = mail.priceBdt * bdtToCoinsRate;
-                mailListEl.innerHTML += `
-                    <div class="card-bg p-4 rounded-lg space-y-3">
-                        <div><h3 class="font-bold text-2xl">${mail.type}</h3><p class="text-sm text-gray-300">Get your mail delivered instantly.</p></div>
-                        <div class="flex items-center justify-between mt-2 pt-3 border-t border-gray-700">
-                             <p class="text-xl text-accent font-semibold">${costInCoins} <span class="text-sm">Coins</span> <span class="text-gray-400 text-xs">(৳${mail.priceBdt})</span></p>
-                             <button class="btn-accent px-8 py-2 rounded-lg" onclick="buyMail('${mail.type}', ${costInCoins}, '${mail.stockKey}')">Buy Now</button>
-                        </div>
-                    </div>`;
-            });
-
             try {
+                const stockPromises = (appConfig.mails || []).map(mail => getStockCount(mail.stockKey));
+                const stockCounts = await Promise.all(stockPromises);
+                
+                mailListEl.innerHTML = '';
+                const bdtToCoinsRate = (appConfig.coinValueCoins || 1000) / (appConfig.coinValueBdt || 10);
+
+                (appConfig.mails || []).forEach((mail, index) => {
+                    const stock = stockCounts[index];
+                    const costInCoins = mail.priceBdt * bdtToCoinsRate;
+                    
+                    const isOutOfStock = stock === 0;
+                    const stockHtml = isOutOfStock
+                        ? `<span class="text-xs bg-red-500/20 text-red-400 font-medium px-2 py-1 rounded-full">স্টক শেষ</span>`
+                        : `<span class="text-xs bg-green-500/20 text-green-300 font-medium px-2 py-1 rounded-full">স্টকে আছে: ${stock}</span>`;
+
+                    const buyButtonDisabled = isOutOfStock ? 'disabled' : '';
+                    const buyButtonClasses = isOutOfStock ? 'btn-disabled' : 'btn-gradient';
+
+                    mailListEl.innerHTML += `
+                        <div class="card-bg p-4 rounded-xl space-y-3">
+                            <div><h3 class="font-bold text-2xl">${mail.type}</h3><p class="text-sm text-gray-400">Get your mail delivered instantly.</p></div>
+                            <div class="flex items-center justify-between mt-2 pt-3 border-t border-gray-700/50">
+                                <p class="text-xl text-[#ff8c00] font-semibold">${costInCoins} <span class="text-sm">Coins</span></p>
+                                ${stockHtml}
+                            </div>
+                             <button class="${buyButtonClasses} w-full py-2.5 mt-2 rounded-lg" ${buyButtonDisabled} onclick="buyMail('${mail.type}', ${costInCoins}, '${mail.stockKey}')">Buy Now</button>
+                        </div>`;
+                });
+
                 const q = query(collection(db, "mail_purchases"), where("userId", "==", currentUser.uid), orderBy("purchasedAt", "desc"));
                 const querySnapshot = await getDocs(q);
                 if(querySnapshot.empty) {
@@ -577,30 +575,28 @@
                 historyListEl.innerHTML = '';
                 querySnapshot.forEach(doc => {
                     const purchase = doc.data();
-                    const date = purchase.purchasedAt.toDate().toLocaleDateString();
-                    const specialFormats = ['HOTMAIL', 'OUTLOOK', '2h+MAIL'];
-                    let mailDetailsHtml = '';
-
-                    if (specialFormats.includes(purchase.mailType) && purchase.password) {
-                        const mailString = `${purchase.mail} ${purchase.password}|${purchase.refresh_token || ''}|${purchase.client_id || ''}`;
-                        mailDetailsHtml = `<p class="font-semibold select-all" style="word-break: break-all;">${purchase.mailType}: <span class="text-gray-300">${mailString}</span></p>`;
-                    } else {
-                        mailDetailsHtml = `
-                           <p class="font-semibold">${purchase.mailType}: <span class="text-gray-300">${purchase.mail}</span></p>
-                           ${purchase.password ? `<p class="font-semibold">Password: <span class="text-gray-300">${purchase.password}</span></p>` : ''}
-                        `;
-                    }
-
+                    const date = purchase.purchasedAt.toDate().toLocaleString();
+                    let mailDetailsHtml = `
+                       <p class="font-semibold text-gray-300" style="word-break: break-all;">${purchase.mail}</p>
+                       ${purchase.password ? `<p class="font-semibold text-gray-300" style="word-break: break-all;">${purchase.password}</p>` : ''}
+                       ${purchase.refresh_token ? `<p class="font-semibold text-gray-300" style="word-break: break-all;">${purchase.refresh_token}</p>` : ''}
+                       ${purchase.client_id ? `<p class="font-semibold text-gray-300" style="word-break: break-all;">${purchase.client_id}</p>` : ''}
+                    `;
                     historyListEl.innerHTML += `
                         <div class="card-bg p-3 rounded-lg">
-                           ${mailDetailsHtml}
-                           <p class="text-xs text-gray-400 mt-1">Date: ${date}</p>
+                           <div class="flex justify-between items-center mb-2">
+                               <p class="font-bold text-lg">${purchase.mailType}</p>
+                               <button onclick="copyToClipboard('${purchase.mail} ${purchase.password || ''} ${purchase.refresh_token || ''} ${purchase.client_id || ''}')" class="p-1"><i data-lucide="copy" class="w-4 h-4 text-gray-400"></i></button>
+                           </div>
+                           <div class="bg-gray-800 p-2 rounded select-all">${mailDetailsHtml}</div>
+                           <p class="text-xs text-gray-400 mt-2 text-right">${date}</p>
                         </div>`;
                 });
-
+                lucide.createIcons();
             } catch(e) {
-                 console.error("Error loading mail purchase history (check Firestore indexes):", e);
-                 historyListEl.innerHTML = '<p class="text-center text-red-400">ইতিহাস লোড করা যায়নি।</p>';
+                 console.error("Error loading mail store:", e);
+                 mailListEl.innerHTML = '<p class="text-center text-red-400">মেইল লোড করা যায়নি।</p>';
+                 historyListEl.innerHTML = '<p class="text-center text-red-400">হিস্টি লোড করা যায়নি।</p>';
             }
         }
 
@@ -622,8 +618,8 @@
                     const mailRef = mailDoc.ref;
                     const mailData = mailDoc.data();
                     const userRef = doc(db, "users", currentUser.uid);
-                    const userSnap = await transaction.get(userRef);
                     
+                    const userSnap = await transaction.get(userRef);
                     if (!userSnap.exists() || userSnap.data().balance < cost) throw `অপর্যাপ্ত ব্যালেন্স।`;
 
                     transaction.update(userRef, { balance: userSnap.data().balance - cost });
@@ -631,14 +627,9 @@
 
                     const purchaseLogRef = doc(collection(db, "mail_purchases"));
                     transaction.set(purchaseLogRef, {
-                        userId: currentUser.uid,
-                        mailType: mailType,
-                        mail: mailData.email,
-                        password: mailData.password || null, // Save password
-                        refresh_token: mailData.refresh_token || null, // Save refresh token if exists
-                        client_id: mailData.client_id || null, // Save client id if exists
-                        cost: cost,
-                        purchasedAt: serverTimestamp()
+                        userId: currentUser.uid, mailType: mailType, mail: mailData.email,
+                        password: mailData.password || null, refresh_token: mailData.refresh_token || null,
+                        client_id: mailData.client_id || null, cost: cost, purchasedAt: serverTimestamp()
                     });
                     
                     return mailData;
@@ -646,7 +637,7 @@
 
                 userData.balance -= cost; 
                 updateUI();
-                showAlert(`সফলভাবে কেনা হয়েছে!\n\nEmail: ${purchasedMailData.email}\nPassword: ${purchasedMailData.password}\n\nসম্পূর্ণ তথ্য দেখতে আপনার ক্রয় ইতিহাস চেক করুন।`);
+                showAlert(`সফলভাবে কেনা হয়েছে!\n\nEmail: ${purchasedMailData.email}\nPassword: ${purchasedMailData.password || 'N/A'}\n\nএই তথ্য আপনার ক্রয় হিস্টিতে সেভ করা হয়েছে।`);
                 loadMailStore(); 
             } catch (e) {
                 console.error("Mail purchase transaction failed: ", e);
@@ -665,7 +656,7 @@
         }
         
         window.copyToClipboard = function(text) {
-            navigator.clipboard.writeText(text).then(() => showAlert('নম্বর কপি করা হয়েছে!'));
+            navigator.clipboard.writeText(text.trim()).then(() => showAlert('কপি করা হয়েছে!'));
         }
     </script>
 </body>
