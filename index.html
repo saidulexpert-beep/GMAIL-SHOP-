@@ -275,7 +275,7 @@
                 } else {
                     const defaultUserData = {
                         uid: currentUser.uid, name: currentUser.displayName || currentUser.email.split('@')[0], email: currentUser.email,
-                        balance: 50, createdAt: serverTimestamp(), isBlocked: false
+                        balance: 0, createdAt: serverTimestamp(), isBlocked: false
                     };
                     await setDoc(userRef, defaultUserData);
                     userData = defaultUserData;
@@ -362,7 +362,7 @@
                 const userRef = doc(db, "users", user.uid);
                 await setDoc(userRef, {
                     uid: user.uid, name: name, email: user.email,
-                    balance: 50, createdAt: serverTimestamp(), isBlocked: false
+                    balance: 0, createdAt: serverTimestamp(), isBlocked: false
                 });
             } catch (error) {
                 showAlert(error.message);
