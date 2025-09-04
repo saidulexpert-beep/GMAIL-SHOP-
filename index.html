@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>𝗗𝗮𝗶𝗹𝘆 𝗣𝗮𝘆𝗕𝗼𝘁 🩳</title>
+    <title>GMAIL SHOP 🩳</title>
     
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
@@ -121,23 +121,27 @@
     <div id="app-container" class="min-h-screen flex-col main-page">
         <header class="header flex items-center justify-between p-4 sticky top-0 z-10">
             <h1 class="text-xl font-bold text-accent-gradient">GMAIL SHOP</h1>
-            <div id="coin-balance-header" class="font-bold text-[#ff8c00]"><span id="header-coin-balance">0</span> Coins</div>
+            <div id="header-balance-display" class="font-bold text-[#ff8c00]">৳0.00</div>
         </header>
 
-        <main class="flex-grow pb-16">
+        <main class="flex-grow pb-20">
             <div id="home-page" class="p-4 space-y-6 sub-page">
                 <div class="card-bg p-5 rounded-xl">
                     <p class="text-gray-400 text-sm mb-1">Your Balance</p>
                     <div class="flex items-center justify-between">
-                        <p class="text-4xl font-bold"><span id="coin-balance">0</span> <span class="text-2xl text-gray-400">Coins</span></p>
+                        <p id="balance-display" class="text-4xl font-bold">৳0.00</p>
                         <button id="home-deposit-btn" class="btn-gradient px-6 py-2 rounded-lg">Deposit</button>
                     </div>
                 </div>
                 <section>
-                    <h2 class="text-lg font-semibold px-2 mb-3">Daily Tasks</h2>
+                    <h2 class="text-lg font-semibold px-2 mb-3">Menu</h2>
                     <div class="space-y-3">
                          <div class="card-bg p-4 rounded-lg flex items-center justify-between">
-                            <div class="flex items-center space-x-4"><span class="text-3xl">😎</span><div><h3 class="font-semibold">Join Telegram</h3><p class="text-xs text-gray-400">Join and get updates</p></div></div>
+                            <div class="flex items-center space-x-4"><i data-lucide="youtube" class="w-8 h-8 text-red-500"></i><div><h3 class="font-semibold">Tutorial</h3><p class="text-xs text-gray-400">কিভাবে কাজ করবেন দেখুন</p></div></div>
+                            <a href="https://youtube.com/@saidulexpert?si=vJ2vgcmp5AmwJ7fW" target="_blank" class="bg-red-600 text-white font-bold px-4 py-2 rounded-lg text-sm btn">Watch</a>
+                        </div>
+                        <div class="card-bg p-4 rounded-lg flex items-center justify-between">
+                            <div class="flex items-center space-x-4"><i data-lucide="send" class="w-8 h-8 text-sky-500"></i><div><h3 class="font-semibold">Join Telegram</h3><p class="text-xs text-gray-400">Join and get updates</p></div></div>
                             <a href="https://t.me/Daily_Cash_Pay" target="_blank" class="bg-blue-600 text-white font-bold px-4 py-2 rounded-lg text-sm btn">Join</a>
                         </div>
                         <div class="card-bg p-4 rounded-lg flex items-center justify-between">
@@ -149,9 +153,21 @@
             </div>
             
             <div id="tasks-page" class="p-4 space-y-6 sub-page">
-                <h2 class="text-xl font-bold text-center">🎯 Complete Tasks & Earn</h2>
-                <p class="text-gray-400 text-center mb-4">ভিডিও দেখে কোড দিন, রিওয়ার্ড পান।</p>
-                <div id="task-list" class="space-y-4"></div>
+                 <div id="tasks-locked-view" class="hidden text-center card-bg p-8 rounded-2xl max-w-sm mx-auto mt-10">
+                    <i data-lucide="lock" class="w-16 h-16 text-yellow-400 mx-auto"></i>
+                    <h2 class="text-2xl font-bold mt-4">Tasks Locked 🔒</h2>
+                    <p class="text-gray-400 mt-2 mb-6">
+                        সকল টাস্ক আনলক করতে এবং আয় শুরু করতে আপনাকে একবারের জন্য ৳30 ফি প্রদান করতে হবে।
+                    </p>
+                    <button id="unlock-tasks-btn" class="w-full max-w-xs mx-auto p-3 rounded-lg btn-gradient">
+                        Unlock Now for ৳30
+                    </button>
+                </div>
+                <div id="tasks-unlocked-view" class="hidden">
+                    <h2 class="text-xl font-bold text-center">🎯 Complete Tasks & Earn</h2>
+                    <p class="text-gray-400 text-center mb-4">ভিডিও দেখে কোড দিন, রিওয়ার্ড পান।</p>
+                    <div id="task-list" class="space-y-4"></div>
+                </div>
             </div>
 
             <div id="pay-page" class="p-4 space-y-6 sub-page">
@@ -163,7 +179,7 @@
                         <div class="space-y-3 mb-4">
                             <div class="bg-gray-800 p-3 rounded-lg flex items-center justify-between"><div class="flex items-center space-x-3"><i data-lucide="smartphone" class="w-8 h-8 text-orange-400"></i><div><p class="font-bold text-md">নগদ</p><p class="text-gray-300 font-mono tracking-widest text-sm">01864260513</p></div></div><button onclick="copyToClipboard('01864260513')" class="p-2 bg-gray-700 rounded-full hover:bg-gray-600 transition-colors"><i data-lucide="copy" class="w-4 h-4"></i></button></div>
                             <div class="bg-gray-800 p-3 rounded-lg flex items-center justify-between"><div class="flex items-center space-x-3"><i data-lucide="smartphone" class="w-8 h-8 text-pink-500"></i><div><p class="font-bold text-md">বিকাশ</p><p class="text-gray-300 font-mono tracking-widest text-sm">01827750260</p></div></div><button onclick="copyToClipboard('01827750260')" class="p-2 bg-gray-700 rounded-full hover:bg-gray-600 transition-colors"><i data-lucide="copy" class="w-4 h-4"></i></button></div>
-                            <div class="bg-gray-800 p-3 rounded-lg flex items-center justify-between"><div class="flex items-center space-x-3"><i data-lucide="rocket" class="w-8 h-8 text-purple-400"></i><div><p class="font-bold text-md">রকেট</p><p class="text-gray-300 font-mono tracking-widest text-sm">018277502604</p></div></div><button onclick="copyToClipboard('018277502064')" class="p-2 bg-gray-700 rounded-full hover:bg-gray-600 transition-colors"><i data-lucide="copy" class="w-4 h-4"></i></button></div>
+                            <div class="bg-gray-800 p-3 rounded-lg flex items-center justify-between"><div class="flex items-center space-x-3"><i data-lucide="rocket" class="w-8 h-8 text-purple-400"></i><div><p class="font-bold text-md">রকেট</p><p class="text-gray-300 font-mono tracking-widest text-sm">018277502604</p></div></div><button onclick="copyToClipboard('018277502604')" class="p-2 bg-gray-700 rounded-full hover:bg-gray-600 transition-colors"><i data-lucide="copy" class="w-4 h-4"></i></button></div>
                             <div class="bg-gray-800 p-3 rounded-lg flex items-center justify-between"><div class="flex items-center space-x-3"><i data-lucide="dollar-sign" class="w-8 h-8 text-yellow-400"></i><div><p class="font-bold text-md">Binance Pay ID</p><p class="text-gray-300 font-mono tracking-widest text-sm">1085460262</p></div></div><button onclick="copyToClipboard('1085460262')" class="p-2 bg-gray-700 rounded-full hover:bg-gray-600 transition-colors"><i data-lucide="copy" class="w-4 h-4"></i></button></div>
                         </div>
                         <p class="text-sm text-gray-400 mb-3">টাকা পাঠানোর পর নিচের ফর্মটি পূরণ করুন:</p>
@@ -184,13 +200,31 @@
 
             <div id="mail-page" class="p-4 space-y-6 sub-page">
                 <h2 class="text-xl font-bold text-center">GMAIL SHOP</h2>
-                <p class="text-gray-400 text-center mb-4">কম দামে এবং  সহজে মেইল কিনুন</p>
+                <p class="text-gray-400 text-center mb-4">কম দামে এবং সহজে মেইল কিনুন</p>
                 <div id="mail-list" class="space-y-4"></div>
                  <div>
                     <h3 class="text-lg font-semibold mb-3 mt-6">Purchase History</h3>
                     <div id="mail-purchase-history" class="space-y-3"></div>
                 </div>
             </div>
+            
+            <div id="admin-page" class="p-4 space-y-6 sub-page">
+                <h2 class="text-xl font-bold text-center">Admin Panel</h2>
+                <div class="card-bg p-5 rounded-xl space-y-4">
+                    <h3 class="font-semibold text-lg">Add New Mails</h3>
+                    <p class="text-sm text-gray-400">ফরম্যাট: <code class="bg-gray-800 p-1 rounded">email|password|refresh_token|client_id</code></p>
+                    <div>
+                        <label for="mail-type-select" class="block text-sm font-medium text-gray-300 mb-1">Mail Type</label>
+                        <select id="mail-type-select" class="w-full p-3 rounded-lg input-field"></select>
+                    </div>
+                    <div>
+                        <label for="mail-data-textarea" class="block text-sm font-medium text-gray-300 mb-1">Mail Data (one per line)</label>
+                        <textarea id="mail-data-textarea" rows="10" placeholder="KneppThorley314@hotmail.com|Y2y6W4jko77Y|refresh_token_here|client_id_here" class="w-full p-3 rounded-lg input-field font-mono text-xs"></textarea>
+                    </div>
+                    <button id="add-mails-btn" class="w-full p-3 rounded-lg btn-gradient">Add Mails to Stock</button>
+                </div>
+            </div>
+
         </main>
 
         <nav class="bottom-nav sticky bottom-0 grid grid-cols-4 items-center text-center py-2 card-bg">
@@ -198,6 +232,7 @@
             <a href="#" class="nav-link" data-page="tasks-page"><i data-lucide="list-checks" class="mx-auto w-6 h-6"></i><span class="text-xs">Tasks</span></a>
             <a href="#" class="nav-link" data-page="pay-page"><i data-lucide="banknote" class="mx-auto w-6 h-6"></i><span class="text-xs">Pay</span></a>
             <a href="#" class="nav-link" data-page="mail-page"><i data-lucide="mail" class="mx-auto w-6 h-6"></i><span class="text-xs">Mail</span></a>
+            <a href="#" id="admin-nav-link" class="nav-link hidden" data-page="admin-page"><i data-lucide="shield" class="mx-auto w-6 h-6"></i><span class="text-xs">Admin</span></a>
         </nav>
     </div>
     
@@ -209,6 +244,12 @@
     </div>
 
     <script type="module">
+        // =================================================================================
+        // !! গুরুত্বপূর্ণ !! আপনার অ্যাডমিন User ID এখানে বসান
+        // !! IMPORTANT !! Set your Admin User ID here
+        const ADMIN_UID = "YOUR_FIREBASE_ADMIN_UID"; // <-- Replace with your Firebase Auth User ID
+        // =================================================================================
+
         const firebaseConfig = {
             apiKey: "AIzaSyBP3OLSykSzQFEEQLDkDO7_rVg-PkY81C0",
             authDomain: "mail-shop-e2256.firebaseapp.com",
@@ -220,7 +261,7 @@
         
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, updateDoc, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, limit, runTransaction, getCountFromServer } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, collection, addDoc, serverTimestamp, query, where, getDocs, orderBy, limit, runTransaction, getCountFromServer, writeBatch } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js";
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
@@ -231,10 +272,14 @@
         let appConfig = {};
 
         const loader = document.getElementById('loader');
-        const coinBalanceEl = document.getElementById('coin-balance');
-        const headerCoinBalanceEl = document.getElementById('header-coin-balance');
-
+        
         window.onload = () => {
+            try {
+                window.Telegram.WebApp.ready();
+                window.Telegram.WebApp.expand();
+            } catch (e) {
+                console.warn("Telegram WebApp script not found or failed to initialize.");
+            }
             lucide.createIcons();
             setupEventListeners();
             showMainPage('auth-section');
@@ -254,6 +299,14 @@
                     return;
                 }
                 await fetchAppConfig();
+                
+                // Show admin nav link if user is admin
+                if (currentUser.uid === ADMIN_UID) {
+                    document.getElementById('admin-nav-link').classList.remove('hidden');
+                    document.querySelector('.bottom-nav').classList.remove('grid-cols-4');
+                    document.querySelector('.bottom-nav').classList.add('grid-cols-5');
+                }
+
                 updateUI();
                 showMainPage('app-container');
                 navigateTo('home-page');
@@ -275,7 +328,9 @@
                 } else {
                     const defaultUserData = {
                         uid: currentUser.uid, name: currentUser.displayName || currentUser.email.split('@')[0], email: currentUser.email,
-                        balance: 0, createdAt: serverTimestamp(), isBlocked: false
+                        balance: 0,
+                        tasksUnlocked: false,
+                        createdAt: serverTimestamp(), isBlocked: false
                     };
                     await setDoc(userRef, defaultUserData);
                     userData = defaultUserData;
@@ -291,17 +346,14 @@
             try {
                 const configSnap = await getDoc(configRef);
                 appConfig = configSnap.exists() ? configSnap.data() : { 
-                    minWithdrawal: 5000, 
-                    paymentMethods: ["BKASH", "NAGAD"], 
-                    coinValueCoins: 1000, 
-                    coinValueBdt: 10,
+                    tasksUnlockFee: 50,
                     mails: [
                         { type: 'L-GMAIL', priceBdt: 4, stockKey: 'l_gmail_stock' },
                         { type: 'O-GMAIL', priceBdt: 3, stockKey: 'o_gmail_stock' },
                         { type: 'TXN-GMAIL', priceBdt: 4, stockKey: 'txn_gmail_stock' },
-                        { type: 'HOTMAIL', priceBdt: 2, stockKey: 'hotmail_stock' },
-                        { type: 'OUTLOOK', priceBdt: 2, stockKey: 'outlook_stock' },
-                        { type: '2h+MAIL', priceBdt: 1, stockKey: '2h_mail_stock' }
+                        { type: 'HOTMAIL', priceBdt: 1.5, stockKey: 'hotmail_stock' },
+                        { type: 'OUTLOOK', priceBdt: 1.5, stockKey: 'outlook_stock' },
+                        { type: '2h+MAIL', priceBdt: 0.5, stockKey: '2h_mail_stock' }
                     ]
                 };
             } catch (error) {
@@ -311,9 +363,9 @@
         
         function updateUI() {
             if (!userData) return;
-            const balance = userData.balance || 0;
-            coinBalanceEl.textContent = balance;
-            headerCoinBalanceEl.textContent = balance;
+            const balance = (userData.balance || 0).toFixed(2);
+            document.getElementById('balance-display').textContent = `৳${balance}`;
+            document.getElementById('header-balance-display').textContent = `৳${balance}`;
         }
 
         function showMainPage(pageId) {
@@ -329,9 +381,19 @@
                 if (link.dataset.page === pageId) link.classList.add('active');
             });
 
-            if (pageId === 'tasks-page') loadTasks();
+            if (pageId === 'tasks-page') {
+                if (userData.tasksUnlocked) {
+                    document.getElementById('tasks-locked-view').classList.add('hidden');
+                    document.getElementById('tasks-unlocked-view').classList.remove('hidden');
+                    loadTasks();
+                } else {
+                    document.getElementById('tasks-unlocked-view').classList.add('hidden');
+                    document.getElementById('tasks-locked-view').classList.remove('hidden');
+                }
+            }
             if (pageId === 'pay-page') loadPaymentHistory();
             if (pageId === 'mail-page') loadMailStore();
+            if (pageId === 'admin-page') populateAdminMailTypes();
             lucide.createIcons();
         }
         window.navigateTo = navigateTo;
@@ -348,6 +410,8 @@
             
             document.getElementById('deposit-btn').addEventListener('click', handleDepositRequest);
             document.getElementById('home-deposit-btn').addEventListener('click', () => navigateTo('pay-page'));
+            document.getElementById('unlock-tasks-btn').addEventListener('click', handleUnlockTasks);
+            document.getElementById('add-mails-btn').addEventListener('click', handleAddMails);
         }
 
         async function handleSignup() {
@@ -359,10 +423,10 @@
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
-                const userRef = doc(db, "users", user.uid);
-                await setDoc(userRef, {
+                await setDoc(doc(db, "users", user.uid), {
                     uid: user.uid, name: name, email: user.email,
-                    balance: 0, createdAt: serverTimestamp(), isBlocked: false
+                    balance: 0, tasksUnlocked: false, 
+                    createdAt: serverTimestamp(), isBlocked: false
                 });
             } catch (error) {
                 showAlert(error.message);
@@ -384,12 +448,16 @@
                 loader.style.display = 'none';
             }
         }
-        
+
+        // ... (The rest of your existing functions: loadPaymentHistory, handleDepositRequest, loadTasks, handleUnlockTasks, submitTask, startTaskTimer, getStockCount, loadMailStore, buyMail) ...
+        // All other functions from the previous version should be pasted here without any change.
+        // For brevity, I'm omitting them but you should include them in your final file.
+        // I will re-include them now for completeness.
+
         async function loadPaymentHistory() {
             const historyList = document.getElementById('payment-history-list');
             historyList.innerHTML = '<p class="text-gray-400">হিস্টি লোড হচ্ছে...</p>';
             try {
-                // Only fetching deposit history now
                 const depositQuery = query(collection(db, "deposits"), where("userId", "==", currentUser.uid), orderBy("requestedAt", "desc"));
                 const depositSnapshot = await getDocs(depositQuery);
                 let history = [];
@@ -406,7 +474,7 @@
                     historyList.innerHTML += `<div class="card-bg p-3 rounded-lg flex items-center justify-between"><div><p class="font-semibold">${item.type} - ${amountText}</p><p class="text-xs text-gray-400">${date}</p></div><p class="font-bold ${statusColor} capitalize">${item.status}</p></div>`;
                 });
             } catch (error) {
-                console.error("Error fetching payment history (check Firestore indexes):", error);
+                console.error("Error fetching payment history:", error);
                 historyList.innerHTML = '<p class="text-red-400 text-center">হিস্টি লোড করা যায়নি।</p>';
             }
         }
@@ -459,12 +527,13 @@
                     const submission = userSubmissions[task.id];
                     const taskDiv = document.createElement("div");
                     taskDiv.className = "card-bg p-4 rounded-lg space-y-3";
+                    const rewardText = `৳${task.reward || 0}`;
                     taskDiv.innerHTML = submission ? `
-                        <div><h3 class="text-lg font-bold">${task.title}</h3><p class="text-sm text-gray-400">পুরস্কার: <span class="font-semibold text-[#ff8c00]">${task.reward} Coins</span></p></div>
+                        <div><h3 class="text-lg font-bold">${task.title}</h3><p class="text-sm text-gray-400">পুরস্কার: <span class="font-semibold text-[#ff8c00]">${rewardText}</span></p></div>
                         <div class="text-center p-2 rounded-lg ${submission.status === 'approved' ? 'bg-green-500/20 text-green-400' : submission.status === 'rejected' ? 'bg-red-500/20 text-red-400' : 'bg-yellow-500/20 text-yellow-400'}">
                             <p class="font-bold capitalize">${submission.status}</p>
                         </div>` : `
-                        <div><h3 class="text-lg font-bold">${task.title}</h3><p class="text-sm text-gray-400">পুরস্কার: <span class="font-semibold text-[#ff8c00]">${task.reward} Coins</span></p></div>
+                        <div><h3 class="text-lg font-bold">${task.title}</h3><p class="text-sm text-gray-400">পুরস্কার: <span class="font-semibold text-[#ff8c00]">${rewardText}</span></p></div>
                         <div id="task-input-area-${task.id}" class="hidden space-y-2">
                             <input type="text" id="code-${task.id}" placeholder="এখানে ভিডিও কোডটি দিন" class="w-full p-2 rounded-lg input-field"/>
                             <button class="w-full p-2 rounded-lg btn-outline-accent" onclick="submitTask('${task.id}', '${task.code}', ${task.reward})">কোড জমা দিন</button>
@@ -479,6 +548,43 @@
         }
         window.loadTasks = loadTasks;
 
+        async function handleUnlockTasks() {
+            const unlockFee = appConfig.tasksUnlockFee || 50;
+            if (userData.balance < unlockFee) {
+                return showAlert(`অপর্যাপ্ত ব্যালেন্স। টাস্ক আনলক করতে আপনার ৳${unlockFee} প্রয়োজন। অনুগ্রহ করে প্রথমে ডিপোজিট করুন।`);
+            }
+            if (!confirm(`আপনি কি ৳${unlockFee} দিয়ে টাস্ক আনলক করতে চান? এই ফি একবারই প্রযোজ্য।`)) return;
+
+            loader.style.display = 'flex';
+            const userRef = doc(db, "users", currentUser.uid);
+
+            try {
+                await runTransaction(db, async (transaction) => {
+                    const userSnap = await transaction.get(userRef);
+                    if (!userSnap.exists()) throw "User does not exist.";
+                    const currentBalance = userSnap.data().balance;
+                    if (currentBalance < unlockFee) throw "Insufficient balance.";
+
+                    const newBalance = currentBalance - unlockFee;
+                    transaction.update(userRef, {
+                        balance: newBalance,
+                        tasksUnlocked: true
+                    });
+                });
+
+                userData.balance -= unlockFee;
+                userData.tasksUnlocked = true;
+                updateUI();
+                showAlert("সফলভাবে টাস্ক আনলক করা হয়েছে!");
+                navigateTo('tasks-page');
+            } catch (error) {
+                console.error("Task unlock transaction failed: ", error);
+                showAlert(typeof error === 'string' ? error : "টাস্ক আনলক করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+
         window.submitTask = async function(taskId, correctCode, reward) {
             const inputCode = document.getElementById(`code-${taskId}`).value.trim();
             if (!inputCode) return showAlert("❌ অনুগ্রহ করে কোডটি লিখুন।");
@@ -487,7 +593,7 @@
             try {
                 await addDoc(collection(db, "taskSubmissions"), {
                     userId: currentUser.uid, userName: userData.name, taskId: taskId,
-                    reward: parseInt(reward), submittedCode: inputCode, status: "pending", submittedAt: serverTimestamp()
+                    reward: parseFloat(reward), submittedCode: inputCode, status: "pending", submittedAt: serverTimestamp()
                 });
                 showAlert("✅ টাস্ক জমা দেওয়া হয়েছে।");
                 loadTasks(); 
@@ -520,8 +626,7 @@
 
         async function getStockCount(collectionName) {
             try {
-                const collectionRef = collection(db, collectionName);
-                const q = query(collectionRef, where("isSold", "==", false));
+                const q = query(collection(db, collectionName), where("isSold", "==", false));
                 const snapshot = await getCountFromServer(q);
                 return snapshot.data().count;
             } catch (error) {
@@ -541,28 +646,27 @@
                 const stockCounts = await Promise.all(stockPromises);
                 
                 mailListEl.innerHTML = '';
-                const bdtToCoinsRate = (appConfig.coinValueCoins || 1000) / (appConfig.coinValueBdt || 10);
 
                 (appConfig.mails || []).forEach((mail, index) => {
                     const stock = stockCounts[index];
-                    const costInCoins = mail.priceBdt * bdtToCoinsRate;
-                    
+                    const costInBdt = mail.priceBdt;
                     const isOutOfStock = stock === 0;
                     const stockHtml = isOutOfStock
                         ? `<span class="text-xs bg-red-500/20 text-red-400 font-medium px-2 py-1 rounded-full">স্টক শেষ</span>`
                         : `<span class="text-xs bg-green-500/20 text-green-300 font-medium px-2 py-1 rounded-full">স্টকে আছে: ${stock}</span>`;
 
-                    const buyButtonDisabled = isOutOfStock ? 'disabled' : '';
-                    const buyButtonClasses = isOutOfStock ? 'btn-disabled' : 'btn-gradient';
+                    const insufficientBalance = userData.balance < costInBdt;
+                    const buyButtonDisabled = isOutOfStock || insufficientBalance ? 'disabled' : '';
+                    const buyButtonClasses = isOutOfStock || insufficientBalance ? 'btn-disabled' : 'btn-gradient';
 
                     mailListEl.innerHTML += `
                         <div class="card-bg p-4 rounded-xl space-y-3">
                             <div><h3 class="font-bold text-2xl">${mail.type}</h3><p class="text-sm text-gray-400">Get your mail delivered instantly.</p></div>
                             <div class="flex items-center justify-between mt-2 pt-3 border-t border-gray-700/50">
-                                <p class="text-xl text-[#ff8c00] font-semibold">${costInCoins} <span class="text-sm">Coins</span></p>
+                                <p class="text-xl text-[#ff8c00] font-semibold">৳${costInBdt.toFixed(2)}</p>
                                 ${stockHtml}
                             </div>
-                             <button class="${buyButtonClasses} w-full py-2.5 mt-2 rounded-lg" ${buyButtonDisabled} onclick="buyMail('${mail.type}', ${costInCoins}, '${mail.stockKey}')">Buy Now</button>
+                             <button class="${buyButtonClasses} w-full py-2.5 mt-2 rounded-lg" ${buyButtonDisabled} onclick="buyMail('${mail.type}', ${costInBdt}, '${mail.stockKey}')">Buy Now</button>
                         </div>`;
                 });
 
@@ -576,17 +680,12 @@
                 querySnapshot.forEach(doc => {
                     const purchase = doc.data();
                     const date = purchase.purchasedAt.toDate().toLocaleString();
-                    let mailDetailsHtml = `
-                       <p class="font-semibold text-gray-300" style="word-break: break-all;">${purchase.mail}</p>
-                       ${purchase.password ? `<p class="font-semibold text-gray-300" style="word-break: break-all;">${purchase.password}</p>` : ''}
-                       ${purchase.refresh_token ? `<p class="font-semibold text-gray-300" style="word-break: break-all;">${purchase.refresh_token}</p>` : ''}
-                       ${purchase.client_id ? `<p class="font-semibold text-gray-300" style="word-break: break-all;">${purchase.client_id}</p>` : ''}
-                    `;
+                    let mailDetailsHtml = `<p class="font-semibold text-gray-300" style="word-break: break-all;">${purchase.mail}</p>${purchase.password ? `<p class="font-semibold text-gray-300" style="word-break: break-all;">${purchase.password}</p>` : ''}`;
                     historyListEl.innerHTML += `
                         <div class="card-bg p-3 rounded-lg">
                            <div class="flex justify-between items-center mb-2">
                                <p class="font-bold text-lg">${purchase.mailType}</p>
-                               <button onclick="copyToClipboard('${purchase.mail} ${purchase.password || ''} ${purchase.refresh_token || ''} ${purchase.client_id || ''}')" class="p-1"><i data-lucide="copy" class="w-4 h-4 text-gray-400"></i></button>
+                               <button onclick="copyToClipboard('${purchase.mail} ${purchase.password || ''}')" class="p-1"><i data-lucide="copy" class="w-4 h-4 text-gray-400"></i></button>
                            </div>
                            <div class="bg-gray-800 p-2 rounded select-all">${mailDetailsHtml}</div>
                            <p class="text-xs text-gray-400 mt-2 text-right">${date}</p>
@@ -601,10 +700,8 @@
         }
 
         window.buyMail = async function(mailType, cost, stockKey) {
-            if (userData.balance < cost) {
-                return showAlert(`অপর্যাপ্ত ব্যালেন্স। আপনার প্রয়োজন ${cost} কয়েন।`);
-            }
-            if (!confirm(`আপনি কি ${cost} কয়েন দিয়ে একটি ${mailType} কিনতে চান?`)) return;
+            if (userData.balance < cost) { return showAlert(`অপর্যাপ্ত ব্যালেন্স। আপনার প্রয়োজন ৳${cost.toFixed(2)}।`); }
+            if (!confirm(`আপনি কি ৳${cost.toFixed(2)} দিয়ে একটি ${mailType} কিনতে চান?`)) return;
 
             loader.style.display = 'flex';
             try {
@@ -628,8 +725,7 @@
                     const purchaseLogRef = doc(collection(db, "mail_purchases"));
                     transaction.set(purchaseLogRef, {
                         userId: currentUser.uid, mailType: mailType, mail: mailData.email,
-                        password: mailData.password || null, refresh_token: mailData.refresh_token || null,
-                        client_id: mailData.client_id || null, cost: cost, purchasedAt: serverTimestamp()
+                        password: mailData.password || null, cost: cost, purchasedAt: serverTimestamp()
                     });
                     
                     return mailData;
@@ -647,6 +743,68 @@
             }
         }
 
+        // --- NEW ADMIN FUNCTIONS ---
+        function populateAdminMailTypes() {
+            const selectEl = document.getElementById('mail-type-select');
+            selectEl.innerHTML = '<option value="">Select mail type...</option>';
+            (appConfig.mails || []).forEach(mail => {
+                selectEl.innerHTML += `<option value="${mail.stockKey}">${mail.type}</option>`;
+            });
+        }
+
+        async function handleAddMails() {
+            const stockKey = document.getElementById('mail-type-select').value;
+            const mailDataRaw = document.getElementById('mail-data-textarea').value;
+
+            if (!stockKey || !mailDataRaw.trim()) {
+                return showAlert("Please select a mail type and provide mail data.");
+            }
+
+            const lines = mailDataRaw.trim().split('\n').filter(line => line.trim() !== '');
+            if (lines.length === 0) {
+                return showAlert("No valid mail data found.");
+            }
+
+            loader.style.display = 'flex';
+            try {
+                const batch = writeBatch(db);
+                let addedCount = 0;
+
+                lines.forEach(line => {
+                    const parts = line.trim().split('|');
+                    if (parts.length === 4) { // email|password|refresh_token|client_id
+                        const mailDocRef = doc(collection(db, stockKey));
+                        batch.set(mailDocRef, {
+                            email: parts[0],
+                            password: parts[1],
+                            refresh_token: parts[2],
+                            client_id: parts[3],
+                            isSold: false,
+                            createdAt: serverTimestamp()
+                        });
+                        addedCount++;
+                    } else {
+                        console.warn("Skipping invalid line:", line);
+                    }
+                });
+
+                if (addedCount > 0) {
+                    await batch.commit();
+                    showAlert(`Successfully added ${addedCount} new mails to the stock.`);
+                    document.getElementById('mail-data-textarea').value = '';
+                } else {
+                    showAlert("No valid mails were found to add. Ensure the format is correct.");
+                }
+
+            } catch (error) {
+                console.error("Error adding mails:", error);
+                showAlert("An error occurred while adding mails.");
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+        
+        // --- UTILITY FUNCTIONS ---
         function showAlert(message) {
             document.getElementById('alert-message').textContent = message;
             document.getElementById('custom-alert').classList.remove('hidden');
@@ -658,6 +816,7 @@
         window.copyToClipboard = function(text) {
             navigator.clipboard.writeText(text.trim()).then(() => showAlert('কপি করা হয়েছে!'));
         }
+
     </script>
 </body>
 </html>
