@@ -142,11 +142,15 @@
                         </div>
                         <div class="card-bg p-4 rounded-lg flex items-center justify-between">
                             <div class="flex items-center space-x-4"><i data-lucide="send" class="w-8 h-8 text-sky-500"></i><div><h3 class="font-semibold">Join Telegram</h3><p class="text-xs text-gray-400">Join and get updates</p></div></div>
-                            <a href="https://t.me/Daily_Cash_Pay" target="_blank" class="bg-blue-600 text-white font-bold px-4 py-2 rounded-lg text-sm btn">Join</a>
+                            <a href="https://t.me/Daily_Cash_Pay" target="_blank" class="bg-blue-600 text-white font-bold px-4 py-2 rounded-lg text-sm btn">JOIN-F</a>
+                        </div>
+                        <div class="card-bg p-4 rounded-lg flex items-center justify-between">
+                            <div class="flex items-center space-x-4"><i data-lucide="headset" class="w-8 h-8 text-green-400"></i><div><h3 class="font-semibold">Support Team</h3><p class="text-xs text-gray-400">Get help from our support</p></div></div>
+                            <a href="http://t.me/GMAIL_SHOP_bot/CHAT" target="_blank" class="bg-green-600 text-white font-bold px-4 py-2 rounded-lg text-sm btn">ACHAT</a>
                         </div>
                         <div class="card-bg p-4 rounded-lg flex items-center justify-between">
                             <div class="flex items-center space-x-4"><span class="text-3xl">🤩</span><div><h3 class="font-semibold">Go to Tasks</h3><p class="text-xs text-gray-400">Complete tasks for rewards</p></div></div>
-                            <button class="bg-gray-200 text-black font-bold px-4 py-2 rounded-lg text-sm btn" onclick="navigateTo('tasks-page')">Tasks</button>
+                            <button class="bg-gray-200 text-black font-bold px-4 py-2 rounded-lg text-sm btn" onclick="navigateTo('tasks-page')">TASKS</button>
                         </div>
                     </div>
                 </section>
@@ -207,7 +211,24 @@
                     <div id="mail-purchase-history" class="space-y-3"></div>
                 </div>
             </div>
-            
+
+            <div id="profile-page" class="p-4 space-y-6 sub-page">
+                <h2 class="text-xl font-bold text-center">Your Profile</h2>
+                <div class="card-bg p-6 rounded-2xl flex flex-col items-center text-center">
+                    <div class="relative mb-4">
+                        <img id="profile-pic" class="w-24 h-24 rounded-full border-2 border-[#ff8c00] object-cover hidden" src="" alt="Profile Picture">
+                        <div id="profile-initials-avatar" class="w-24 h-24 rounded-full bg-gray-700 flex items-center justify-center border-2 border-[#ff8c00]">
+                            <span id="profile-initials" class="text-3xl font-bold text-gray-300"></span>
+                        </div>
+                    </div>
+                    <h3 id="profile-name" class="text-2xl font-bold">Loading...</h3>
+                    <p id="profile-username" class="text-gray-400">@username</p>
+                    <p id="profile-id" class="text-sm text-gray-500 mt-2">ID: 123456</p>
+                </div>
+                <p class="text-center text-gray-500 text-sm mt-8">
+                    Developed by <a href="https://t.me/SAIDUL_1" target="_blank" class="font-semibold text-[#ff8c00] hover:underline">SAIDUL</a>
+                </p>
+            </div>
             <div id="admin-page" class="p-4 space-y-6 sub-page">
                 <h2 class="text-xl font-bold text-center">Admin Panel</h2>
                 <div class="card-bg p-5 rounded-xl space-y-4">
@@ -227,14 +248,15 @@
 
         </main>
 
-        <nav class="bottom-nav sticky bottom-0 grid grid-cols-4 items-center text-center py-2 card-bg">
+        <nav class="bottom-nav sticky bottom-0 grid grid-cols-5 items-center text-center py-2 card-bg">
             <a href="#" class="nav-link" data-page="home-page"><i data-lucide="home" class="mx-auto w-6 h-6"></i><span class="text-xs">Home</span></a>
             <a href="#" class="nav-link" data-page="tasks-page"><i data-lucide="list-checks" class="mx-auto w-6 h-6"></i><span class="text-xs">Tasks</span></a>
             <a href="#" class="nav-link" data-page="pay-page"><i data-lucide="banknote" class="mx-auto w-6 h-6"></i><span class="text-xs">Pay</span></a>
             <a href="#" class="nav-link" data-page="mail-page"><i data-lucide="mail" class="mx-auto w-6 h-6"></i><span class="text-xs">Mail</span></a>
+            <a href="#" class="nav-link" data-page="profile-page"><i data-lucide="user" class="mx-auto w-6 h-6"></i><span class="text-xs">Profile</span></a>
             <a href="#" id="admin-nav-link" class="nav-link hidden" data-page="admin-page"><i data-lucide="shield" class="mx-auto w-6 h-6"></i><span class="text-xs">Admin</span></a>
         </nav>
-    </div>
+        </div>
     
     <div id="custom-alert" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
         <div class="bg-gray-800 rounded-lg p-6 w-full max-w-sm text-center border border-gray-700">
@@ -300,12 +322,16 @@
                 }
                 await fetchAppConfig();
                 
-                // Show admin nav link if user is admin
+                // --- CHANGED --- Show admin nav link if user is admin
                 if (currentUser.uid === ADMIN_UID) {
                     document.getElementById('admin-nav-link').classList.remove('hidden');
-                    document.querySelector('.bottom-nav').classList.remove('grid-cols-4');
-                    document.querySelector('.bottom-nav').classList.add('grid-cols-5');
+                    const nav = document.querySelector('.bottom-nav');
+                    nav.classList.remove('grid-cols-5');
+                    nav.classList.add('grid-cols-6');
+                    // Hide the regular profile link if admin link is shown to avoid clutter
+                    nav.querySelector('a[data-page="profile-page"]').classList.add('hidden');
                 }
+                // --- END OF CHANGE ---
 
                 updateUI();
                 showMainPage('app-container');
@@ -346,7 +372,7 @@
             try {
                 const configSnap = await getDoc(configRef);
                 appConfig = configSnap.exists() ? configSnap.data() : { 
-                    tasksUnlockFee: 50,
+                    tasksUnlockFee: 30, // Updated fee
                     mails: [
                         { type: 'L-GMAIL', priceBdt: 4, stockKey: 'l_gmail_stock' },
                         { type: 'O-GMAIL', priceBdt: 3, stockKey: 'o_gmail_stock' },
@@ -387,6 +413,9 @@
                     document.getElementById('tasks-unlocked-view').classList.remove('hidden');
                     loadTasks();
                 } else {
+                    const unlockBtn = document.getElementById('unlock-tasks-btn');
+                    const fee = appConfig.tasksUnlockFee || 30;
+                    unlockBtn.textContent = `Unlock Now for ৳${fee}`;
                     document.getElementById('tasks-unlocked-view').classList.add('hidden');
                     document.getElementById('tasks-locked-view').classList.remove('hidden');
                 }
@@ -394,6 +423,9 @@
             if (pageId === 'pay-page') loadPaymentHistory();
             if (pageId === 'mail-page') loadMailStore();
             if (pageId === 'admin-page') populateAdminMailTypes();
+            // --- ADDED ---
+            if (pageId === 'profile-page') loadProfilePage();
+            // --- END OF ADDED ---
             lucide.createIcons();
         }
         window.navigateTo = navigateTo;
@@ -448,11 +480,42 @@
                 loader.style.display = 'none';
             }
         }
+        
+        // --- ADDED PROFILE PAGE FUNCTION ---
+        function loadProfilePage() {
+            const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
+            const profilePic = document.getElementById('profile-pic');
+            const avatarDiv = document.getElementById('profile-initials-avatar');
 
-        // ... (The rest of your existing functions: loadPaymentHistory, handleDepositRequest, loadTasks, handleUnlockTasks, submitTask, startTaskTimer, getStockCount, loadMailStore, buyMail) ...
-        // All other functions from the previous version should be pasted here without any change.
-        // For brevity, I'm omitting them but you should include them in your final file.
-        // I will re-include them now for completeness.
+            if (tgUser) {
+                // Use Telegram data
+                if (tgUser.photo_url) {
+                    profilePic.src = tgUser.photo_url;
+                    profilePic.classList.remove('hidden');
+                    avatarDiv.classList.add('hidden');
+                } else {
+                    const initials = (tgUser.first_name?.[0] || '') + (tgUser.last_name?.[0] || '');
+                    document.getElementById('profile-initials').textContent = initials.toUpperCase();
+                    profilePic.classList.add('hidden');
+                    avatarDiv.classList.remove('hidden');
+                }
+                
+                document.getElementById('profile-name').textContent = `${tgUser.first_name} ${tgUser.last_name || ''}`.trim();
+                document.getElementById('profile-username').textContent = tgUser.username ? `@${tgUser.username}` : 'No Telegram Username';
+                document.getElementById('profile-id').textContent = `Telegram ID: ${tgUser.id}`;
+            } else {
+                // Fallback to Firebase data
+                const initials = userData.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+                document.getElementById('profile-initials').textContent = initials;
+                profilePic.classList.add('hidden');
+                avatarDiv.classList.remove('hidden');
+                
+                document.getElementById('profile-name').textContent = userData.name;
+                document.getElementById('profile-username').textContent = userData.email;
+                document.getElementById('profile-id').textContent = `User UID: ${currentUser.uid.substring(0, 10)}...`;
+            }
+        }
+        // --- END OF PROFILE PAGE FUNCTION ---
 
         async function loadPaymentHistory() {
             const historyList = document.getElementById('payment-history-list');
@@ -549,7 +612,7 @@
         window.loadTasks = loadTasks;
 
         async function handleUnlockTasks() {
-            const unlockFee = appConfig.tasksUnlockFee || 50;
+            const unlockFee = appConfig.tasksUnlockFee || 30;
             if (userData.balance < unlockFee) {
                 return showAlert(`অপর্যাপ্ত ব্যালেন্স। টাস্ক আনলক করতে আপনার ৳${unlockFee} প্রয়োজন। অনুগ্রহ করে প্রথমে ডিপোজিট করুন।`);
             }
@@ -743,7 +806,7 @@
             }
         }
 
-        // --- NEW ADMIN FUNCTIONS ---
+        // --- ADMIN FUNCTIONS ---
         function populateAdminMailTypes() {
             const selectEl = document.getElementById('mail-type-select');
             selectEl.innerHTML = '<option value="">Select mail type...</option>';
