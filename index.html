@@ -167,10 +167,36 @@
                         Unlock Now for ৳30
                     </button>
                 </div>
-                <div id="tasks-unlocked-view" class="hidden">
-                    <h2 class="text-xl font-bold text-center">🎯 Complete Tasks & Earn</h2>
-                    <p class="text-gray-400 text-center mb-4">ভিডিও দেখে কোড দিন, রিওয়ার্ড পান।</p>
-                    <div id="task-list" class="space-y-4"></div>
+                <div id="tasks-unlocked-view" class="hidden space-y-6">
+                    <div id="referral-section">
+                        <div id="referral-input-view" class="hidden card-bg p-5 rounded-xl text-center">
+                             <i data-lucide="gift" class="w-12 h-12 text-green-400 mx-auto mb-2"></i>
+                            <h3 class="text-lg font-semibold">Got a Referral Code?</h3>
+                            <p class="text-sm text-gray-400 mb-4">Enter a code to get a welcome bonus!</p>
+                            <div class="flex gap-2">
+                                <input id="referral-code-input" type="text" placeholder="Enter Referral Code" class="w-full p-3 rounded-lg input-field text-center uppercase">
+                                <button onclick="verifyReferralCode()" class="p-3 rounded-lg btn-gradient">Verify</button>
+                            </div>
+                        </div>
+                        <div id="referral-display-view" class="hidden card-bg p-5 rounded-xl text-center">
+                            <i data-lucide="share-2" class="w-12 h-12 text-sky-400 mx-auto mb-2"></i>
+                            <h3 class="text-lg font-semibold">Share & Earn!</h3>
+                            <p class="text-sm text-gray-400 mb-4">Share your code with friends. You earn when they unlock tasks!</p>
+                            <div class="bg-gray-800 p-3 rounded-lg flex items-center justify-between mb-4">
+                                <p class="font-mono tracking-widest text-lg text-gray-300" id="user-referral-code">ABCDEF</p>
+                                <button onclick="copyToClipboard(document.getElementById('user-referral-code').textContent, 'Referral code copied!')" class="p-2 bg-gray-700 rounded-full hover:bg-gray-600 transition-colors"><i data-lucide="copy" class="w-5 h-5"></i></button>
+                            </div>
+                            <button onclick="shareReferralLink()" class="w-full p-3 rounded-lg btn-gradient flex items-center justify-center gap-2">
+                                <i data-lucide="send" class="w-5 h-5"></i>
+                                <span>Share Invite Link</span>
+                            </button>
+                        </div>
+                        </div>
+                    <div>
+                        <h2 class="text-xl font-bold text-center">🎯 Complete Tasks & Earn</h2>
+                        <p class="text-gray-400 text-center mb-4">ভিডিও দেখে কোড দিন, রিওয়ার্ড পান।</p>
+                        <div id="task-list" class="space-y-4"></div>
+                    </div>
                 </div>
             </div>
 
@@ -225,7 +251,16 @@
                     <h3 id="profile-name" class="text-2xl font-bold">Loading...</h3>
                     <p id="profile-username" class="text-gray-400">@username</p>
                     <p id="profile-id" class="text-sm text-gray-500 mt-2">ID: 123456</p>
-                </div>
+                    <div class="mt-4 bg-gray-800/50 px-4 py-2 rounded-lg w-full max-w-xs flex items-center justify-between">
+                        <div class="text-left">
+                            <p class="text-xs text-gray-400">Referral Code</p>
+                            <p id="profile-card-referral-code" class="font-mono tracking-widest text-lg text-gray-200">...</p>
+                        </div>
+                        <button onclick="copyToClipboard(document.getElementById('profile-card-referral-code').textContent, 'Referral code copied!')" class="p-2 bg-gray-700 rounded-full hover:bg-gray-600 transition-colors">
+                            <i data-lucide="copy" class="w-5 h-5 text-gray-300"></i>
+                        </button>
+                    </div>
+                    </div>
 
                 <div class="space-y-2">
                     <button id="toggle-personal-info-btn" class="w-full card-bg p-4 rounded-2xl flex justify-between items-center text-left">
@@ -346,6 +381,7 @@
             if (user) {
                 loader.style.display = 'flex';
                 currentUser = user;
+                await fetchAppConfig(); // Fetch config first to have referral bonus values ready
                 await fetchUserData();
                 if (userData.isBlocked) {
                     showAlert("আপনার অ্যাকাউন্ট ব্লক করা হয়েছে।");
@@ -353,7 +389,6 @@
                     loader.style.display = 'none';
                     return;
                 }
-                await fetchAppConfig();
                 
                 if (currentUser.uid === ADMIN_UID) {
                     document.getElementById('admin-nav-link').classList.remove('hidden');
@@ -382,14 +417,8 @@
                 if (userSnap.exists()) {
                     userData = userSnap.data();
                 } else {
-                    const defaultUserData = {
-                        uid: currentUser.uid, name: currentUser.displayName || currentUser.email.split('@')[0], email: currentUser.email,
-                        balance: 0,
-                        tasksUnlocked: false,
-                        createdAt: serverTimestamp(), isBlocked: false
-                    };
-                    await setDoc(userRef, defaultUserData);
-                    userData = defaultUserData;
+                    // This case is handled in handleSignup now
+                    console.log("User doc doesn't exist, will be created.");
                 }
             } catch (error) {
                 console.error("Error fetching user data:", error);
@@ -403,6 +432,8 @@
                 const configSnap = await getDoc(configRef);
                 appConfig = configSnap.exists() ? configSnap.data() : { 
                     tasksUnlockFee: 30,
+                    referralBonus: 5, // Bonus for the user who enters the code
+                    referrerCommission: 10, // Commission for the owner of the code
                     mails: [
                         { type: 'L-GMAIL', priceBdt: 4, stockKey: 'l_gmail_stock' },
                         { type: 'O-GMAIL', priceBdt: 3, stockKey: 'o_gmail_stock' },
@@ -441,6 +472,19 @@
                 if (userData.tasksUnlocked) {
                     document.getElementById('tasks-locked-view').classList.add('hidden');
                     document.getElementById('tasks-unlocked-view').classList.remove('hidden');
+                    
+                    // Handle referral section visibility
+                    const referralInputView = document.getElementById('referral-input-view');
+                    const referralDisplayView = document.getElementById('referral-display-view');
+                    if (userData.hasUsedReferralCode) {
+                        referralInputView.classList.add('hidden');
+                        referralDisplayView.classList.remove('hidden');
+                        document.getElementById('user-referral-code').textContent = userData.referralCode;
+                    } else {
+                        referralDisplayView.classList.add('hidden');
+                        referralInputView.classList.remove('hidden');
+                    }
+
                     loadTasks();
                 } else {
                     const unlockBtn = document.getElementById('unlock-tasks-btn');
@@ -492,11 +536,18 @@
             try {
                 const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
-                await setDoc(doc(db, "users", user.uid), {
+                
+                const defaultUserData = {
                     uid: user.uid, name: name, email: user.email,
                     balance: 0, tasksUnlocked: false, 
-                    createdAt: serverTimestamp(), isBlocked: false
-                });
+                    createdAt: serverTimestamp(), isBlocked: false,
+                    referralCode: user.uid.substring(0, 6).toUpperCase(),
+                    hasUsedReferralCode: false,
+                    referredBy: null
+                };
+                
+                await setDoc(doc(db, "users", user.uid), defaultUserData);
+                userData = defaultUserData; // Set local user data immediately
             } catch (error) {
                 showAlert(error.message);
             } finally {
@@ -547,6 +598,9 @@
                 document.getElementById('profile-id').textContent = `User UID: ${currentUser.uid.substring(0, 10)}...`;
             }
             document.getElementById('profile-email').textContent = userData.email;
+            
+            const referralCode = userData.referralCode || 'N/A';
+            document.getElementById('profile-card-referral-code').textContent = referralCode;
         }
 
         async function handleChangePassword() {
@@ -740,6 +794,93 @@
             }, 1000);
         }
 
+        // --- REFERRAL FUNCTION ---
+        window.verifyReferralCode = async function() {
+            const enteredCode = document.getElementById('referral-code-input').value.trim().toUpperCase();
+            if (!enteredCode) return showAlert("অনুগ্রহ করে একটি রেফারেল কোড দিন।");
+            if (enteredCode === userData.referralCode) return showAlert("আপনি নিজের রেফারেল কোড ব্যবহার করতে পারবেন না।");
+
+            loader.style.display = 'flex';
+            try {
+                const usersRef = collection(db, "users");
+                const q = query(usersRef, where("referralCode", "==", enteredCode), limit(1));
+                const querySnapshot = await getDocs(q);
+
+                if (querySnapshot.empty) {
+                    throw "অবৈধ রেফারেল কোড।";
+                }
+
+                const referrerDoc = querySnapshot.docs[0];
+                const referrerRef = referrerDoc.ref;
+                const currentUserRef = doc(db, "users", currentUser.uid);
+
+                const bonus = appConfig.referralBonus || 5;
+                const commission = appConfig.referrerCommission || 10;
+
+                await runTransaction(db, async (transaction) => {
+                    const currentUserSnap = await transaction.get(currentUserRef);
+                    const referrerSnap = await transaction.get(referrerRef);
+
+                    if (!currentUserSnap.exists() || !referrerSnap.exists()) throw "User not found.";
+                    if (currentUserSnap.data().hasUsedReferralCode) throw "আপনি ইতিমধ্যে একটি রেফারেল কোড ব্যবহার করেছেন।";
+
+                    // Update current user (the one who entered the code)
+                    transaction.update(currentUserRef, {
+                        balance: (currentUserSnap.data().balance || 0) + bonus,
+                        hasUsedReferralCode: true,
+                        referredBy: referrerDoc.id
+                    });
+                    
+                    // Update referrer (the one whose code was used)
+                    transaction.update(referrerRef, {
+                        balance: (referrerSnap.data().balance || 0) + commission
+                    });
+                });
+                
+                // Update local data
+                userData.balance += bonus;
+                userData.hasUsedReferralCode = true;
+                
+                showAlert(`সফল! আপনি ৳${bonus.toFixed(2)} বোনাস পেয়েছেন।`);
+                updateUI();
+                navigateTo('tasks-page'); // Re-render the page to show the user's own code
+
+            } catch (error) {
+                console.error("Referral verification failed:", error);
+                showAlert(typeof error === 'string' ? error : "কোড ভেরিফাই করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।");
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+        
+        // --- NEW/UPDATED Share & Copy Functions ---
+        window.shareReferralLink = async function() {
+            const referralCode = userData.referralCode;
+            if (!referralCode) {
+                showAlert("Could not find your referral code.");
+                return;
+            }
+            const shareUrl = `http://t.me/GMAIL_SHOP_bot/shop?start=${referralCode}`;
+            const shareText = `✨ GMAILSHOP এ যোগ দিন আর উপার্জন করুন!\n🎁 বোনাস পেতে এখনই আমার রেফারেল কোড ব্যবহার করুন: ${referralCode}\n\nJoin here: ${shareUrl}`;
+
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: 'Join GMAILSHOP!',
+                        text: shareText,
+                    });
+                } catch (error) {
+                    console.error('Error sharing:', error);
+                    if (error.name !== 'AbortError') {
+                       copyToClipboard(shareText, 'Share failed, invite message copied!');
+                    }
+                }
+            } else {
+                copyToClipboard(shareText, 'Invite message copied to clipboard!');
+            }
+        }
+
+
         async function getStockCount(collectionName) {
             try {
                 const q = query(collection(db, collectionName), where("isSold", "==", false));
@@ -929,8 +1070,8 @@
             };
         }
         
-        window.copyToClipboard = function(text) {
-            navigator.clipboard.writeText(text.trim()).then(() => showAlert('কপি করা হয়েছে!'));
+        window.copyToClipboard = function(text, message = 'কপি করা হয়েছে!') {
+            navigator.clipboard.writeText(text.trim()).then(() => showAlert(message));
         }
 
     </script>
