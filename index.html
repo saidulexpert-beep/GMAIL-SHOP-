@@ -241,7 +241,7 @@
                 <div class="card-bg p-5 rounded-xl space-y-4">
                     <h3 class="font-semibold mb-2 text-lg">New Withdrawal Request</h3>
                     <div class="space-y-3">
-                        <input id="withdraw-amount" type="number" placeholder="Withdrawal Amount (BDT)" class="w-full p-3 rounded-lg input-field">
+                        <input id="withdraw-amount" type="number" placeholder="Minimum ৳100" class="w-full p-3 rounded-lg input-field">
                         <select id="withdraw-method" class="w-full p-3 rounded-lg input-field">
                             <option value="">Select Payment Method</option>
                             <option value="Nagad">নগদ</option>
@@ -772,17 +772,19 @@
         }
 
         // =================================================================
-        // CORRECTED WITHDRAW FUNCTIONS
+        // CORRECTED & UPDATED WITHDRAW FUNCTIONS
         // =================================================================
         async function handleWithdrawRequest() {
             const amount = parseFloat(document.getElementById('withdraw-amount').value);
             const method = document.getElementById('withdraw-method').value;
-            // FIXED: Read the account number from the input field
             const account = document.getElementById('withdraw-account').value.trim();
 
-            // FIXED: Added 'account' to the validation check
             if (!amount || amount <= 0 || !method || !account) {
                 return showAlert("অনুগ্রহ করে সমস্ত ফর্ম সঠিকভাবে পূরণ করুন।");
+            }
+            // MODIFIED: Added minimum withdrawal check
+            if (amount < 100) {
+                return showAlert("ন্যূনতম উইথড্র পরিমাণ ৳100।");
             }
             if (amount > userData.balance) {
                 return showAlert(`অপর্যাপ্ত ব্যালেন্স। আপনি ৳${userData.balance.toFixed(2)} পর্যন্ত তুলতে পারবেন।`);
@@ -807,7 +809,6 @@
                     transaction.update(userRef, { balance: newBalance });
                     
                     const withdrawalRef = doc(collection(db, "withdrawals"));
-                    // FIXED: The 'account' variable now holds the correct value to be saved
                     transaction.set(withdrawalRef, {
                         userId: currentUser.uid, userName: userData.name, amount: amount,
                         method: method, account: account, status: "pending", requestedAt: serverTimestamp()
@@ -850,9 +851,7 @@
                     let statusColor = item.status === 'approved' ? 'text-green-400' : item.status === 'rejected' ? 'text-red-400' : 'text-yellow-400';
                     const date = item.requestedAt ? item.requestedAt.toDate().toLocaleDateString() : 'N/A';
                     const amountText = `৳${item.amount.toFixed(2)}`;
-                    
-                    // FIXED: Read the account number and display it
-                    const accountNumber = item.account || 'N/A'; // Fallback to 'N/A' if somehow missing
+                    const accountNumber = item.account || 'N/A';
                     
                     historyList.innerHTML += `
                         <div class="card-bg p-3 rounded-lg flex items-center justify-between">
