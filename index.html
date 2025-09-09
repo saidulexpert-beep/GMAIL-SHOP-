@@ -771,11 +771,16 @@
             }
         }
 
+        // =================================================================
+        // CORRECTED WITHDRAW FUNCTIONS
+        // =================================================================
         async function handleWithdrawRequest() {
             const amount = parseFloat(document.getElementById('withdraw-amount').value);
             const method = document.getElementById('withdraw-method').value;
+            // FIXED: Read the account number from the input field
             const account = document.getElementById('withdraw-account').value.trim();
 
+            // FIXED: Added 'account' to the validation check
             if (!amount || amount <= 0 || !method || !account) {
                 return showAlert("অনুগ্রহ করে সমস্ত ফর্ম সঠিকভাবে পূরণ করুন।");
             }
@@ -784,19 +789,44 @@
             }
             
             loader.style.display = 'flex';
+            const userRef = doc(db, "users", currentUser.uid);
+
             try {
-                await addDoc(collection(db, "withdrawals"), {
-                    userId: currentUser.uid, userName: userData.name, amount: amount,
-                    method: method, account: account, status: "pending", requestedAt: serverTimestamp()
+                await runTransaction(db, async (transaction) => {
+                    const userSnap = await transaction.get(userRef);
+                    if (!userSnap.exists()) {
+                        throw "User document does not exist!";
+                    }
+
+                    const currentBalance = userSnap.data().balance;
+                    if (currentBalance < amount) {
+                        throw "Insufficient balance.";
+                    }
+
+                    const newBalance = currentBalance - amount;
+                    transaction.update(userRef, { balance: newBalance });
+                    
+                    const withdrawalRef = doc(collection(db, "withdrawals"));
+                    // FIXED: The 'account' variable now holds the correct value to be saved
+                    transaction.set(withdrawalRef, {
+                        userId: currentUser.uid, userName: userData.name, amount: amount,
+                        method: method, account: account, status: "pending", requestedAt: serverTimestamp()
+                    });
                 });
+
+                userData.balance -= amount;
+                updateUI();
+
                 showAlert("আপনার উইথড্রয়াল অনুরোধ সফলভাবে জমা দেওয়া হয়েছে। এটি শীঘ্রই প্রক্রিয়া করা হবে।");
                 document.getElementById('withdraw-amount').value = '';
                 document.getElementById('withdraw-method').value = '';
                 document.getElementById('withdraw-account').value = '';
                 loadWithdrawalHistory();
+
             } catch (error) {
                 console.error("Error submitting withdrawal request:", error);
-                showAlert("আপনার অনুরোধ জমা দেওয়ার সময় একটি সমস্যা হয়েছে।");
+                const errorMessage = typeof error === 'string' ? error : "আপনার অনুরোধ জমা দেওয়ার সময় একটি সমস্যা হয়েছে।";
+                showAlert(errorMessage);
             } finally {
                 loader.style.display = 'none';
             }
@@ -820,7 +850,18 @@
                     let statusColor = item.status === 'approved' ? 'text-green-400' : item.status === 'rejected' ? 'text-red-400' : 'text-yellow-400';
                     const date = item.requestedAt ? item.requestedAt.toDate().toLocaleDateString() : 'N/A';
                     const amountText = `৳${item.amount.toFixed(2)}`;
-                    historyList.innerHTML += `<div class="card-bg p-3 rounded-lg flex items-center justify-between"><div><p class="font-semibold">${item.method} - ${amountText}</p><p class="text-xs text-gray-400">${date} - ${item.account}</p></div><p class="font-bold ${statusColor} capitalize">${item.status}</p></div>`;
+                    
+                    // FIXED: Read the account number and display it
+                    const accountNumber = item.account || 'N/A'; // Fallback to 'N/A' if somehow missing
+                    
+                    historyList.innerHTML += `
+                        <div class="card-bg p-3 rounded-lg flex items-center justify-between">
+                            <div>
+                                <p class="font-semibold">${item.method} - ${amountText}</p>
+                                <p class="text-xs text-gray-400">${date} - ${accountNumber}</p>
+                            </div>
+                            <p class="font-bold ${statusColor} capitalize">${item.status}</p>
+                        </div>`;
                 });
             } catch (error) {
                 console.error("Error fetching withdrawal history:", error);
