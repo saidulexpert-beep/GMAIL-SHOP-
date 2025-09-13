@@ -138,11 +138,11 @@
                     <div class="space-y-3">
                          <div class="card-bg p-4 rounded-lg flex items-center justify-between">
                             <div class="flex items-center space-x-4"><i data-lucide="youtube" class="w-8 h-8 text-red-500"></i><div><h3 class="font-semibold">Tutorial</h3><p class="text-xs text-gray-400">কিভাবে কাজ করবেন দেখুন</p></div></div>
-                            <a href="https://youtu.be/ajjEcCY4qOg?si=LZmFM2HWew1kdQoi" target="_blank" class="bg-red-600 text-white font-bold px-4 py-2 rounded-lg text-sm btn">Watch</a>
+                            <a href="https://youtube.com/@saidulexpert?si=vJ2vgcmp5AmwJ7fW" target="_blank" class="bg-red-600 text-white font-bold px-4 py-2 rounded-lg text-sm btn">Watch</a>
                         </div>
                         <div class="card-bg p-4 rounded-lg flex items-center justify-between">
                             <div class="flex items-center space-x-4"><i data-lucide="send" class="w-8 h-8 text-sky-500"></i><div><h3 class="font-semibold">Join Telegram</h3><p class="text-xs text-gray-400">Join and get updates</p></div></div>
-                            <a href="https://t.me/Life_Work_BD" target="_blank" class="bg-blue-600 text-white font-bold px-4 py-2 rounded-lg text-sm btn">JOIN F</a>
+                            <a href="https://t.me/Daily_Cash_Pay" target="_blank" class="bg-blue-600 text-white font-bold px-4 py-2 rounded-lg text-sm btn">JOIN F</a>
                         </div>
                         <div class="card-bg p-4 rounded-lg flex items-center justify-between">
                             <div class="flex items-center space-x-4"><i data-lucide="headset" class="w-8 h-8 text-green-400"></i><div><h3 class="font-semibold">Support Team</h3><p class="text-xs text-gray-400">Get help from our support</p></div></div>
@@ -269,6 +269,18 @@
                 </div>
             </div>
 
+            <div id="sell-page" class="p-4 space-y-6 sub-page">
+                <h2 class="text-xl font-bold text-center">Sell Your Account</h2>
+                <p class="text-gray-400 text-center mb-4">আপনার একাউন্ট বিক্রি করে আয় করুন</p>
+                
+                <div id="sell-item-list" class="space-y-4">
+                    </div>
+                
+                <div>
+                    <h3 class="text-lg font-semibold mb-3 mt-8">Your Sell History</h3>
+                    <div id="sell-history-list" class="space-y-3"></div>
+                </div>
+            </div>
             <div id="profile-page" class="p-4 space-y-6 sub-page">
                 <div class="card-bg p-6 rounded-2xl flex flex-col items-center text-center">
                     <div class="relative mb-4">
@@ -353,11 +365,12 @@
 
         </main>
 
-        <nav class="bottom-nav sticky bottom-0 grid grid-cols-5 items-center text-center py-2 card-bg">
+        <nav class="bottom-nav sticky bottom-0 grid grid-cols-6 items-center text-center py-2 card-bg">
             <a href="#" class="nav-link" data-page="home-page"><i data-lucide="home" class="mx-auto w-6 h-6"></i><span class="text-xs">Home</span></a>
             <a href="#" class="nav-link" data-page="tasks-page"><i data-lucide="list-checks" class="mx-auto w-6 h-6"></i><span class="text-xs">Tasks</span></a>
             <a href="#" class="nav-link" data-page="pay-page"><i data-lucide="banknote" class="mx-auto w-6 h-6"></i><span class="text-xs">Pay</span></a>
             <a href="#" class="nav-link" data-page="mail-page"><i data-lucide="mail" class="mx-auto w-6 h-6"></i><span class="text-xs">Mail</span></a>
+            <a href="#" class="nav-link" data-page="sell-page"><i data-lucide="tag" class="mx-auto w-6 h-6"></i><span class="text-xs">Sell</span></a>
             <a href="#" class="nav-link" data-page="profile-page"><i data-lucide="user" class="mx-auto w-6 h-6"></i><span class="text-xs">Profile</span></a>
             <a href="#" id="admin-nav-link" class="nav-link hidden" data-page="admin-page"><i data-lucide="shield" class="mx-auto w-6 h-6"></i><span class="text-xs">Admin</span></a>
         </nav>
@@ -369,6 +382,19 @@
             <button id="alert-ok-btn" class="btn-gradient px-8 py-2 rounded-lg">OK</button>
         </div>
     </div>
+    
+    <div id="sell-modal" class="hidden fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 backdrop-blur-sm">
+        <div class="card-bg rounded-2xl p-6 w-full max-w-sm space-y-4">
+            <h3 id="sell-modal-title" class="text-xl font-bold text-center text-accent-gradient">Sell Your Account</h3>
+            <p class="text-sm text-gray-400 text-center">অনুগ্রহ করে আপনার একাউন্টের সকল তথ্য দিন।</p>
+            <div id="sell-modal-fields-container" class="space-y-3 max-h-60 overflow-y-auto pr-2"></div>
+            <div class="flex gap-3 pt-2">
+                <button id="sell-modal-cancel" class="w-full p-3 rounded-lg btn-outline-accent">Cancel</button>
+                <button id="sell-modal-submit" class="w-full p-3 rounded-lg btn-gradient">Submit</button>
+            </div>
+        </div>
+    </div>
+
 
     <script type="module">
         // =================================================================================
@@ -397,6 +423,66 @@
         let currentUser = null;
         let userData = null;
         let appConfig = {};
+        
+        // Sellable items configuration with specific fields
+        const sellableItems = [
+            { 
+                type: 'FACEBOOK', 
+                details: '0 Friend', 
+                price: 10, 
+                icon: 'facebook',
+                fields: [
+                    { name: 'UID', placeholder: 'Enter Account UID', type: 'text' },
+                    { name: 'Password', placeholder: 'Enter Password', type: 'text' },
+                    { name: '2FA Key', placeholder: 'Enter 2FA Authentication Key', type: 'text' },
+                    { name: 'Email', placeholder: 'Recovery Email Address', type: 'email' }
+                ]
+            },
+            { 
+                type: 'FACEBOOK', 
+                details: '30+ Friend', 
+                price: 14, 
+                icon: 'facebook',
+                fields: [
+                    { name: 'UID', placeholder: 'Enter Account UID', type: 'text' },
+                    { name: 'Password', placeholder: 'Enter Password', type: 'text' },
+                    { name: '2FA Key', placeholder: 'Enter 2FA Authentication Key', type: 'text' },
+                    { name: 'Email', placeholder: 'Recovery Email Address', type: 'email' }
+                ]
+            },
+            { 
+                type: 'GMAIL', 
+                details: 'Fresh Account', 
+                price: 8, 
+                icon: 'mail',
+                fields: [
+                    { name: 'Email', placeholder: 'Enter Gmail Address', type: 'email' },
+                    { name: 'Password', placeholder: 'Enter Password', type: 'text' },
+                    { name: 'Recovery Email', placeholder: 'Recovery Email (Optional)', type: 'email', required: false }
+                ]
+            },
+                { 
+                type: 'GMAIL', 
+                details: 'FB-Fr Account', 
+                price: 1.5, 
+                icon: 'mail',
+                fields: [
+                    { name: 'Email', placeholder: 'Enter Gmail Address', type: 'email' },
+                    { name: 'Password', placeholder: 'Enter Password', type: 'text' },
+                    { name: 'Recovery Email', placeholder: 'Recovery Email (Optional)', type: 'email', required: false }
+                ]
+            },
+            { 
+                type: 'GMAIL', 
+                details: 'jast FB Account', 
+                price: 2.5, 
+                icon: 'mail',
+                fields: [
+                    { name: 'Email', placeholder: 'Enter Gmail Address', type: 'email' },
+                    { name: 'Password', placeholder: 'Enter Password', type: 'text' },
+                ]
+            }
+        ];
 
         const loader = document.getElementById('loader');
         
@@ -431,9 +517,10 @@
                     const adminNavLink = document.getElementById('admin-nav-link');
                     adminNavLink.classList.remove('hidden');
                     const nav = adminNavLink.closest('.bottom-nav');
-                    nav.classList.remove('grid-cols-5');
-                    nav.classList.add('grid-cols-6');
+                    nav.classList.remove('grid-cols-6');
+                    nav.classList.add('grid-cols-7');
                     nav.querySelector('a[data-page="profile-page"]').classList.add('hidden');
+                    nav.querySelector('a[data-page="sell-page"]').classList.add('hidden');
                 }
 
                 updateUI();
@@ -532,6 +619,10 @@
             if (pageId === 'pay-page') loadPaymentHistory();
             if (pageId === 'withdraw-page') loadWithdrawalHistory();
             if (pageId === 'mail-page') loadMailStore();
+            if (pageId === 'sell-page') {
+                loadSellItems();
+                loadSellHistory();
+            }
             if (pageId === 'admin-page') populateAdminMailTypes();
             if (pageId === 'profile-page') loadProfilePage();
             lucide.createIcons();
@@ -555,6 +646,8 @@
             document.getElementById('add-mails-btn').addEventListener('click', handleAddMails);
             document.getElementById('change-password-btn').addEventListener('click', handleChangePassword);
             document.getElementById('toggle-personal-info-btn').addEventListener('click', togglePersonalInfo);
+            document.getElementById('sell-modal-cancel').addEventListener('click', () => document.getElementById('sell-modal').classList.add('hidden'));
+
         }
         
         function togglePersonalInfo() {
@@ -771,9 +864,6 @@
             }
         }
 
-        // =================================================================
-        // CORRECTED & UPDATED WITHDRAW FUNCTIONS
-        // =================================================================
         async function handleWithdrawRequest() {
             const amount = parseFloat(document.getElementById('withdraw-amount').value);
             const method = document.getElementById('withdraw-method').value;
@@ -782,7 +872,6 @@
             if (!amount || amount <= 0 || !method || !account) {
                 return showAlert("অনুগ্রহ করে সমস্ত ফর্ম সঠিকভাবে পূরণ করুন।");
             }
-            // MODIFIED: Added minimum withdrawal check
             if (amount < 100) {
                 return showAlert("ন্যূনতম উইথড্র পরিমাণ ৳100।");
             }
@@ -868,6 +957,194 @@
             }
         }
         
+        // ============= NEW & IMPROVED SELL FUNCTIONS =============
+        function loadSellItems() {
+            const sellList = document.getElementById('sell-item-list');
+            sellList.innerHTML = ''; // Clear previous items
+            sellableItems.forEach(item => {
+                const iconColor = item.type === 'FACEBOOK' ? 'text-blue-500' : 'text-red-500';
+                const button = document.createElement('button');
+                button.className = 'btn-gradient px-6 py-2 rounded-lg';
+                button.innerHTML = `SELL <span class="font-bold">৳${item.price}</span>`;
+                button.onclick = () => openSellModal(item.type, item.details);
+                
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'card-bg p-4 rounded-xl flex items-center justify-between';
+                itemDiv.innerHTML = `
+                    <div class="flex items-center gap-4">
+                        <i data-lucide="${item.icon}" class="w-10 h-10 ${iconColor}"></i>
+                        <div>
+                            <h3 class="font-bold text-lg">${item.type}</h3>
+                            <p class="text-sm text-gray-400">${item.details}</p>
+                        </div>
+                    </div>
+                `;
+                itemDiv.appendChild(button);
+                sellList.appendChild(itemDiv);
+            });
+            lucide.createIcons();
+        }
+
+        window.openSellModal = function(type, itemDetails) {
+            const modal = document.getElementById('sell-modal');
+            const itemConfig = sellableItems.find(item => item.type === type && item.details === itemDetails);
+
+            if (!itemConfig) {
+                showAlert("Error: Item configuration not found.");
+                return;
+            }
+
+            document.getElementById('sell-modal-title').textContent = `Sell ${itemConfig.type} (${itemConfig.details})`;
+            const fieldsContainer = document.getElementById('sell-modal-fields-container');
+            fieldsContainer.innerHTML = '';
+
+            itemConfig.fields.forEach(field => {
+                const inputId = `sell-field-${field.name.replace(/\s+/g, '-')}`;
+                const isRequired = field.required !== false;
+                const inputHtml = `
+                    <div>
+                        <label for="${inputId}" class="block text-xs font-medium text-gray-300 mb-1">${field.name}${isRequired ? '' : ' (Optional)'}</label>
+                        <input type="${field.type || 'text'}" id="${inputId}" placeholder="${field.placeholder}" class="w-full p-3 rounded-lg input-field font-mono text-sm">
+                    </div>
+                `;
+                fieldsContainer.insertAdjacentHTML('beforeend', inputHtml);
+            });
+            
+            const submitBtn = document.getElementById('sell-modal-submit');
+            const newSubmitBtn = submitBtn.cloneNode(true);
+            submitBtn.parentNode.replaceChild(newSubmitBtn, submitBtn);
+            newSubmitBtn.addEventListener('click', () => handleSellRequest(itemConfig));
+
+            modal.classList.remove('hidden');
+        }
+        
+        async function handleSellRequest(itemConfig) {
+            const accountDetails = {};
+            let isValid = true;
+
+            itemConfig.fields.forEach(field => {
+                const inputId = `sell-field-${field.name.replace(/\s+/g, '-')}`;
+                const inputElement = document.getElementById(inputId);
+                const value = inputElement.value.trim();
+                const isRequired = field.required !== false;
+
+                if (isRequired && !value) {
+                    inputElement.style.borderColor = '#ef4444';
+                    isValid = false;
+                } else {
+                    inputElement.style.borderColor = '';
+                }
+                accountDetails[field.name] = value;
+            });
+
+            if (!isValid) {
+                return showAlert("Please fill in all required fields.");
+            }
+
+            document.getElementById('sell-modal').classList.add('hidden');
+            loader.style.display = 'flex';
+
+            try {
+                // START: Duplicate Check Logic
+                let uniqueField = null;
+                let uniqueValue = null;
+
+                if (itemConfig.type === 'FACEBOOK') {
+                    uniqueField = 'accountDetails.UID';
+                    uniqueValue = accountDetails['UID'];
+                } else if (itemConfig.type === 'GMAIL') {
+                    uniqueField = 'accountDetails.Email';
+                    uniqueValue = accountDetails['Email'];
+                }
+                
+                if (uniqueField && uniqueValue) {
+                    const sellRequestsRef = collection(db, "sell_requests");
+                    // Query for documents where the unique field matches and status is pending or approved
+                    const q = query(sellRequestsRef, 
+                        where(uniqueField, "==", uniqueValue), 
+                        where("status", "in", ["pending", "approved"])
+                    );
+                    const querySnapshot = await getDocs(q);
+
+                    if (!querySnapshot.empty) {
+                        // If we find any match, it's a duplicate.
+                        throw new Error("এই একাউন্টটি ইতিমধ্যে বিক্রির জন্য জমা দেওয়া হয়েছে।");
+                    }
+                }
+                // END: Duplicate Check Logic
+
+                await addDoc(collection(db, "sell_requests"), {
+                    userId: currentUser.uid,
+                    userName: userData.name,
+                    accountType: `${itemConfig.type} (${itemConfig.details})`,
+                    accountDetails: accountDetails, // Storing as an object
+                    askingPrice: itemConfig.price,
+                    status: "pending",
+                    requestedAt: serverTimestamp()
+                });
+                showAlert("Your sell request has been submitted successfully and is now pending review.");
+                loadSellHistory();
+            } catch (error) {
+                console.error("Error submitting sell request:", error);
+                // Display the specific error message from our check, or a generic one for other errors.
+                showAlert(error.message || "There was a problem submitting your request. Please try again.");
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+
+        async function loadSellHistory() {
+            const historyList = document.getElementById('sell-history-list');
+            historyList.innerHTML = '<p class="text-gray-400 text-center">Loading history...</p>';
+            try {
+                const q = query(collection(db, "sell_requests"), where("userId", "==", currentUser.uid), orderBy("requestedAt", "desc"));
+                const snapshot = await getDocs(q);
+
+                if (snapshot.empty) {
+                    historyList.innerHTML = '<p class="text-gray-400 text-center">You have not submitted any accounts for sale.</p>';
+                    return;
+                }
+
+                historyList.innerHTML = '';
+                snapshot.forEach(doc => {
+                    const item = doc.data();
+                    const statusColor = item.status === 'approved' ? 'text-green-400' : item.status === 'rejected' ? 'text-red-400' : 'text-yellow-400';
+                    const date = item.requestedAt ? item.requestedAt.toDate().toLocaleDateString() : 'N/A';
+                    
+                    let detailsHtml = '';
+                    if (typeof item.accountDetails === 'object' && item.accountDetails !== null) {
+                        detailsHtml = Object.entries(item.accountDetails)
+                            .map(([key, value]) => {
+                                if (value) { 
+                                    return `<div class="grid grid-cols-3 gap-2"><strong class="col-span-1 text-gray-400 text-right">${key}:</strong><span class="col-span-2 text-gray-200 font-mono break-all">${value}</span></div>`;
+                                }
+                                return '';
+                            }).join('');
+                    } else {
+                        detailsHtml = `<p class="text-xs text-gray-400 whitespace-pre-wrap font-mono">${item.accountDetails}</p>`;
+                    }
+
+                    historyList.innerHTML += `
+                        <div class="card-bg p-3 rounded-lg">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="font-semibold">${item.accountType}</p>
+                                    <p class="text-xs text-gray-400">${date} - <span class="font-bold">৳${item.askingPrice.toFixed(2)}</span></p>
+                                </div>
+                                <p class="font-bold ${statusColor} capitalize">${item.status}</p>
+                            </div>
+                            <div class="mt-2 pt-2 border-t border-gray-700/50 space-y-1 text-sm">
+                                ${detailsHtml}
+                            </div>
+                        </div>`;
+                });
+            } catch (error) {
+                console.error("Error fetching sell history:", error);
+                historyList.innerHTML = '<p class="text-red-400 text-center">Could not load sell history.</p>';
+            }
+        }
+        // =========================================================
+
         async function loadTasks() {
             const taskList = document.getElementById("task-list");
             taskList.innerHTML = '<p class="text-gray-400 text-center">টাস্ক লোড হচ্ছে...</p>';
@@ -1044,14 +1321,8 @@
             const referralCode = userData.referralCode;
             if (!referralCode) { showAlert("Could not find your referral code."); return; }
             const shareUrl = `http://t.me/GMAIL_SHOP_bot/shop?start=${referralCode}`;
-const shareText = `✨ GMAILSHOP এ যোগ দিন আর উপার্জন করুন!
-🎁 বোনাস পেতে এখনই আমার রেফারেল কোড ব্যবহার করুন: ${referralCode}
+            const shareText = `✨ GMAILSHOP এ যোগ দিন আর উপার্জন করুন!\n🎁 বোনাস পেতে এখনই আমার রেফারেল কোড ব্যবহার করুন: ${referralCode}\n\nJoin here: ${shareUrl}`;
 
-💸 প্রতি রেফারে পাবেন 20 টাকা
-📧 কম দামে MAIL কেনার সুযোগ
-🆓 সাপ্তাহিক জিরো টাকায় MAIL নেওয়ার সুযোগ
-
-Join here: ${shareUrl}`;
             if (navigator.share) {
                 try { await navigator.share({ title: 'Join GMAILSHOP!', text: shareText }); } catch (error) {
                     console.error('Error sharing:', error);
