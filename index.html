@@ -1187,7 +1187,7 @@
                 userData.balance -= unlockFee;
                 userData.tasksUnlocked = true;
                 updateUI();
-                showAlert("সফলভাবে টাস্ক আনলক করা হয়েছে!");
+                showAlert("আপনি সফলভাবে টাস্ক আনলক করেছেন!");
                 navigateTo('tasks-page');
             } catch (error) {
                 console.error("Task unlock transaction failed: ", error);
@@ -1295,14 +1295,20 @@
             const referralCode = userData.referralCode;
             if (!referralCode) { showAlert("Could not find your referral code."); return; }
             const shareUrl = `http://t.me/GMAIL_SHOP_bot/shop?start=${referralCode}`;
-            const shareText = `✨ GMAILSHOP এ যোগ দিন আর উপার্জন করুন!\n🎁 বোনাস পেতে এখনই আমার রেফারেল কোড ব্যবহার করুন: ${referralCode}\n\nJoin here: ${shareUrl}`;
-
+const shareText = `💖 ভালোবাসা ভাগ করলে যেমন বাড়ে, তেমনি রেফারেল শেয়ার করলে বেড়ে যাবে আপনার ইনকাম!
+🎁 আজই আমার রেফারেল কোড ব্যবহার করুন: ${referralCode} এবং পান এক্সক্লুসিভ বোনাস।
+💸 প্রতি রেফারে পাবেন ২০ টাকা – সহজে ইনকাম করুন আর মুহূর্তেই উইথড্রো করুন।
+🌟 দেরি করলে মিস করবেন দারুণ সুযোগ – লস হবে শুধুই আপনার!
+👉 জয়েন করুন এখনই: ${shareUrl}`;
             if (navigator.share) {
                 try { await navigator.share({ title: 'Join GMAILSHOP!', text: shareText }); } catch (error) {
                     console.error('Error sharing:', error);
                     if (error.name !== 'AbortError') copyToClipboard(shareText, 'Share failed, invite message copied!');
                 }
-            } else { copyToClipboard(shareText, 'Invite message copied to clipboard!'); }
+         } else {
+    copyToClipboard(shareText, `🎉 Invite copied!
+বন্ধুদের পাঠান, প্রতি রেফারে ২০ টাকা ইনকাম করুন! 💸`);
+}
         }
 
         async function getStockCount(collectionName) {
