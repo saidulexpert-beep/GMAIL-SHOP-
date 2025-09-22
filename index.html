@@ -478,13 +478,13 @@
                 <div class="mt-8">
                     <h3 class="text-xl font-bold text-center mb-4">More Apps</h3>
                     <div class="grid grid-cols-2 gap-4">
-                        <a href="t.me/EXPERTearnbot/earn" target="_blank" class="card-bg rounded-xl p-4 flex flex-col items-center text-center space-y-3 hover:border-orange-500/50">
+                        <a href="https://shorturl.at/FxO7m" target="_blank" class="card-bg rounded-xl p-4 flex flex-col items-center text-center space-y-3 hover:border-orange-500/50">
                             <img src="https://i.postimg.cc/fbXdh8CW/Red-Abstract-Income-Money-You-Tube-Thumbnail-20250921-152438-0000.png?text=APP+1" class="w-20 h-20 rounded-full object-cover">
                             <h4 class="font-bold text-lg text-accent-gradient">𝐄𝐗𝐏𝐄𝐑𝐓𝐞𝐚𝐫𝐧</h4>
                             <p class="text-xs text-gray-400">একদম ফ্রীতে ইনকাম করতে পারবেন </p>
                         </a>
                         <a href="#" class="card-bg rounded-xl p-4 flex flex-col items-center text-center space-y-3 hover:border-orange-500/50">
-                            <img src="https://i.postimg.cc/7hTd1GyZ/air-drop-logo-96485-1865.jpg?text=APP+2" class="w-20 h-20 rounded-full object-cover">
+                           <img src="https://i.postimg.cc/7hTd1GyZ/air-drop-logo-96485-1865.jpg?text=APP+2" class="w-20 h-20 rounded-full object-cover">
                             <h4 class="font-bold text-lg text-accent-gradient">Airdrop</h4>
                             <p class="text-xs text-gray-400">Coming soon.</p>
                         </a>
@@ -896,6 +896,21 @@
             }
             loader.style.display = 'flex';
             try {
+                // Check for duplicate Transaction ID
+                const depositQuery = query(
+                    collection(db, "deposits"),
+                    where("transactionId", "==", transactionId),
+                    where("status", "in", ["pending", "approved"]) // Check for pending or approved duplicates
+                );
+                const querySnapshot = await getDocs(depositQuery);
+
+                if (!querySnapshot.empty) {
+                    // If a document with the same transactionId and status (pending/approved) exists, it's a duplicate
+                    loader.style.display = 'none'; // Hide loader before showing alert
+                    showAlert("এই Transaction ID দিয়ে ইতিমধ্যে একটি ডিপোজিট অনুরোধ জমা দেওয়া হয়েছে।");
+                    return; // Stop the function here
+                }
+
                 await addDoc(collection(db, "deposits"), {
                     userId: currentUser.uid, userName: userData.name, method: method, amount: amount,
                     senderNumber: senderNumber, transactionId: transactionId, status: "pending", requestedAt: serverTimestamp()
