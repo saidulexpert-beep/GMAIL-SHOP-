@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GMAIL SHOP 🩳</title>
 
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -135,7 +136,7 @@
             <main class="flex-grow p-6 space-y-6">
                 <div class="glass-card p-6 text-center">
                      <p class="text-gray-300 mb-4">আমাদের নতুন এবং উন্নত সিস্টেমে যোগ দিন।</p>
-                     <a href="https://t.me/your_new_bot_link" target="_blank" class="btn-premium w-full flex items-center justify-center gap-2">
+                     <a href="https://t.me/mail_storebot/mail" target="_blank" class="btn-premium w-full flex items-center justify-center gap-2">
                          <i data-lucide="send"></i>
                          <span>আমাদের নতুন বট</span>
                      </a>
@@ -167,9 +168,6 @@
     </div>
 
     <script type="module">
-        // Firebase and other necessary imports would go here.
-        // For demonstration, the Firebase logic is included below.
-        
         const firebaseConfig = {
             apiKey: "AIzaSyBP3OLSykSzQFEEQLDkDO7_rVg-PkY81C0",
             authDomain: "mail-shop-e2256.firebaseapp.com",
@@ -193,6 +191,14 @@
         const loader = document.getElementById('loader');
         
         window.onload = () => {
+            // Initialize Telegram Web App
+            try {
+                window.Telegram.WebApp.ready();
+                window.Telegram.WebApp.expand();
+            } catch (e) {
+                console.warn("Telegram WebApp script not found or failed to initialize.");
+            }
+            
             lucide.createIcons();
             setupEventListeners();
             showPage('auth-page');
@@ -204,9 +210,15 @@
             if (user) {
                 currentUser = user;
                 await fetchUserData();
-                if (userData.isBlocked) {
-                    showAlert("আপনার অ্যাকাউন্ট ব্লক করা হয়েছে।");
+                if (!userData) { // If user exists in Auth but not in DB (e.g., deleted from DB)
                     await signOut(auth);
+                    showAlert("আপনার একাউন্ট খুঁজে পাওয়া যায়নি।");
+                    toggleLoader(false);
+                    return;
+                }
+                if (userData.isBlocked) {
+                    await signOut(auth);
+                    showAlert("আপনার অ্যাকাউন্ট ব্লক করা হয়েছে।");
                     toggleLoader(false);
                     return;
                 }
@@ -228,8 +240,7 @@
             if (userSnap.exists()) {
                 userData = userSnap.data();
             } else {
-                // Handle case where user exists in Auth but not Firestore
-                await signOut(auth);
+                userData = null; // User not found in Firestore
             }
         }
         
@@ -265,24 +276,30 @@
         }
         
         async function handleFullWithdraw() {
+            const tgUser = window.Telegram?.WebApp?.initDataUnsafe?.user;
+
+            // Check if running inside Telegram
+            if (!tgUser?.id) {
+                return showAlert("এই সুবিধাটি শুধুমাত্র টেলিগ্রাম অ্যাপের ভেতর থেকে ব্যবহার করা যাবে।");
+            }
+            const userChatId = tgUser.id; // Get user's unique Telegram ID
+
             const balance = userData.balance || 0;
             if (balance <= 0) {
                 return showAlert("আপনার অ্যাকাউন্টে কোনো ব্যালেন্স নেই।");
             }
             
-            const confirmation = confirm(`আপনি কি নিশ্চিত যে আপনার সম্পূর্ণ ব্যালেন্স ৳${balance.toFixed(2)} আমাদের নতুন বটে স্থানান্তর করতে চান? এই প্রক্রিয়াটি সম্পন্ন হলে আপনার বর্তমান ব্যালেন্স শূন্য হয়ে যাবে।`);
+            const confirmation = confirm(`আপনি কি নিশ্চিত যে আপনার সম্পূর্ণ ব্যালেন্স ৳${balance.toFixed(2)} আমাদের নতুন বটে স্থানান্তর করতে চান?`);
 
-            if (!confirmation) {
-                return;
-            }
+            if (!confirmation) return;
 
             toggleLoader(true);
             try {
-                // Request withdrawal for the full balance
+                // Request withdrawal for the full balance with Telegram user ID
                 await addDoc(collection(db, "withdrawals"), {
                     userId: currentUser.uid,
-                    userName: userData.name,
-                    userChatId: userData.chatId || 'Not Provided', // Assuming you have chatId in user data
+                    userName: userData.name || 'N/A',
+                    userChatId: userChatId, // Use the collected Telegram ID
                     amount: balance,
                     method: "Balance Transfer to New Bot",
                     recipientNumber: "Internal Transfer",
@@ -290,7 +307,7 @@
                     requestedAt: serverTimestamp()
                 });
                 
-                // Set user's current balance to 0
+                // Set user's current balance to 0 in Firestore
                 const userRef = doc(db, "users", currentUser.uid);
                 await setDoc(userRef, { balance: 0 }, { merge: true });
                 
@@ -299,10 +316,10 @@
                 updateUI();
                 
                 showAlert(`আপনার ৳${balance.toFixed(2)} স্থানান্তরের অনুরোধ সফলভাবে জমা হয়েছে। অ্যাডমিন পর্যালোচনার পর আপনার নতুন বটে ব্যালেন্স যোগ হয়ে যাবে।`);
-                loadWithdrawalHistory();
+                await loadWithdrawalHistory();
             } catch (error) {
                 console.error("Error during full withdrawal:", error);
-                showAlert("ব্যালেন্স স্থানান্তরে একটি সমস্যা হয়েছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন।");
+                showAlert("একটি অপ্রত্যাশিত সমস্যা হয়েছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন।");
             } finally {
                 toggleLoader(false);
             }
@@ -324,19 +341,11 @@
                     let statusColor, statusIcon, statusText;
                     switch (item.status) {
                         case 'approved':
-                            statusColor = 'text-green-400';
-                            statusIcon = 'check-circle-2';
-                            statusText = 'Approved';
-                            break;
+                            statusColor = 'text-green-400'; statusIcon = 'check-circle-2'; statusText = 'Approved'; break;
                         case 'rejected':
-                            statusColor = 'text-red-400';
-                            statusIcon = 'x-circle';
-                            statusText = 'Rejected';
-                            break;
+                            statusColor = 'text-red-400'; statusIcon = 'x-circle'; statusText = 'Rejected'; break;
                         default:
-                            statusColor = 'text-yellow-400';
-                            statusIcon = 'hourglass';
-                            statusText = 'Pending';
+                            statusColor = 'text-yellow-400'; statusIcon = 'hourglass'; statusText = 'Pending';
                     }
                     const date = item.requestedAt ? item.requestedAt.toDate().toLocaleDateString('en-GB') : 'N/A';
                     const method = item.method === "Balance Transfer to New Bot" ? "Balance Transfer" : item.method;
@@ -365,11 +374,8 @@
 
         function toggleLoader(show) {
             const loader = document.getElementById('loader');
-            if (show) {
-                loader.classList.remove('hidden');
-            } else {
-                loader.classList.add('hidden');
-            }
+            if (show) loader.classList.remove('hidden');
+            else loader.classList.add('hidden');
         }
 
         function showAlert(message) {
